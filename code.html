@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KAVACH AI | Unified Crime Intelligence Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#ef4444", 
+                    "background": "#050b14", 
+                    "surface": "#0a121e",
+                    "on-surface": "#e2e1ed",
+                    "on-background": "#e2e1ed",
+                    "outline": "rgba(255,255,255,0.15)",
+                    "tertiary": "#4cd7f6", 
+                    "secondary": "#ef4444",
+                    "deep-navy": "#081120"
+            },
+            "fontFamily": {
+                    "data-mono": ["JetBrains Mono"],
+                    "headline-md": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #050b14;
+            color: #e2e1ed;
+            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .liquid-glass {
+            background: rgba(10, 18, 30, 0.4);
+            backdrop-filter: blur(60px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .liquid-glass:hover {
+            border-color: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.05);
+        }
+
+        .tactical-grid {
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(239, 68, 68, 0.03) 1px, transparent 0),
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 24px 24px, 120px 120px, 120px 120px;
+        }
+
+        .scanner-beam {
+            background: linear-gradient(to bottom, transparent, rgba(239, 68, 68, 0.15), transparent);
+            height: 150px;
+            width: 100%;
+            position: absolute;
+            z-index: 10;
+            animation: scan-vertical 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan-vertical {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        .red-pulse {
+            animation: red-pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes red-pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .perspective-view {
+            perspective: 2000px;
+        }
+        
+        .angled-panel {
+            transform: rotateX(2deg) rotateY(-2deg);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .angled-panel:hover {
+            transform: rotateX(0deg) rotateY(0deg);
+        }
+
+        .glow-border-cyan {
+            border: 1px solid rgba(76, 215, 246, 0.3);
+            box-shadow: inset 0 0 15px rgba(76, 215, 246, 0.05);
+        }
+
+        .cyber-gradient-text {
+            background: linear-gradient(90deg, #4cd7f6, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050b14; }
+        ::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.5); border-radius: 10px; }
+        
+        .data-stream {
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+        }
+    </style>
+</head>
+<body class="tactical-grid bg-deep-navy">
+<!-- Header -->
+<header class="fixed top-0 left-0 w-full z-[100] liquid-glass h-20 flex justify-between items-center px-10 border-b border-white/5">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="font-bold text-2xl tracking-[0.2em] text-primary">KAVACH AI</span>
+<span class="font-data-mono text-[10px] text-white/40 tracking-tighter uppercase">Karnataka State Crime Intel Unit</span>
+</div>
+<nav class="hidden lg:flex gap-8 ml-12 font-data-mono text-xs uppercase tracking-widest">
+<a class="text-primary border-b border-primary py-1" href="#intelligence">Intelligence</a>
+<a class="text-white/60 hover:text-white transition-colors py-1" href="#forensics">Forensics</a>
+<a class="text-white/60 hover:text-white transition-colors py-1" href="#predictions">Predictions</a>
+<a class="text-white/60 hover:text-white transition-colors py-1" href="#protocols">Protocols</a>
+</nav>
+</div>
+<div class="flex items-center gap-8">
+<div class="flex flex-col items-end mr-4">
+<span class="font-data-mono text-[10px] text-primary">SYSTEM: NOMINAL</span>
+<span class="font-data-mono text-[10px] text-white/40">ENC_TYPE: AES-512-KSP</span>
+</div>
+<button class="bg-primary hover:bg-red-500 text-white font-data-mono text-xs px-6 py-3 tracking-widest transition-all rounded-sm">TERMINAL_LOGIN</button>
+</div>
+</header>
+<main>
+<!-- Section 1: MISSION CONTROL HERO -->
+<section class="relative min-h-screen pt-20 flex items-center justify-center overflow-hidden perspective-view" id="intelligence">
+<div class="scanner-beam"></div>
+<div class="max-w-[1600px] w-full px-10 grid grid-cols-12 gap-8 relative z-20">
+<div class="col-span-12 lg:col-span-7 space-y-12 py-20">
+<div class="inline-block liquid-glass px-4 py-1 border-l-4 border-primary">
+<span class="font-data-mono text-xs text-primary uppercase tracking-[0.3em]">Operational Readiness: Level Alpha</span>
+</div>
+<h1 class="font-display-lg text-7xl lg:text-9xl font-bold leading-none tracking-tighter">
+                    CRIME<br/>
+<span class="text-primary">INTELLIGENCE</span><br/>
+                    PORTAL.
+                </h1>
+<p class="font-data-mono text-lg text-white/60 max-w-2xl leading-relaxed">
+                    Advanced neural-mesh surveillance and real-time kinetic intervention engine. Karnataka State Police global command interface for unified threat mitigation.
+                </p>
+<div class="flex gap-6">
+<button class="bg-primary text-white px-10 py-5 font-data-mono text-sm tracking-widest flex items-center gap-3 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-sm">rocket_launch</span>
+                        DEPLOY ASSETS
+                    </button>
+<button class="liquid-glass text-white px-10 py-5 font-data-mono text-sm tracking-widest border border-white/10 hover:bg-white/5 transition-all">
+                        LIVE_FEEDS.v4
+                    </button>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 grid grid-cols-2 gap-4 angled-panel">
+<div class="liquid-glass p-8 space-y-2 border-white/5">
+<span class="text-white/40 font-data-mono text-[10px] uppercase">Node Density</span>
+<div class="text-4xl font-bold text-primary">14.2k</div>
+<div class="w-full bg-white/5 h-1"><div class="bg-primary h-full w-[82%]"></div></div>
+</div>
+<div class="liquid-glass p-8 space-y-2 border-white/5">
+<span class="text-white/40 font-data-mono text-[10px] uppercase">Sync Latency</span>
+<div class="text-4xl font-bold text-tertiary">0.4s</div>
+<div class="w-full bg-white/5 h-1"><div class="bg-tertiary h-full w-[12%]"></div></div>
+</div>
+<div class="col-span-2 liquid-glass p-8 space-y-6 border-white/5">
+<div class="flex justify-between items-end">
+<span class="text-white/40 font-data-mono text-[10px] uppercase">AI Threat Probability</span>
+<span class="text-2xl font-bold text-primary">98.2%</span>
+</div>
+<div class="grid grid-cols-12 h-16 gap-1">
+<div class="col-span-1 bg-primary/20"></div><div class="col-span-1 bg-primary/40"></div><div class="col-span-1 bg-primary/20"></div>
+<div class="col-span-2 bg-primary/60"></div><div class="col-span-2 bg-primary/80"></div><div class="col-span-5 bg-primary"></div>
+</div>
+<p class="font-data-mono text-[10px] text-white/40 leading-tight">PREDICTION ENGINE STATUS: MAXIMIZED. TARGET ACQUISITION SYSTEM ONLINE. NEURAL BIAS: NEUTRAL.</p>
+</div>
+<div class="col-span-2 p-4 font-data-mono text-[9px] text-white/20 tracking-tighter uppercase border border-white/5 bg-black/20">
+                    Telemetry: 0x88.sync_active // kernel_load: 42% // auth: KSP_HQ_ADMIN // location: BENGALURU_CORE
+                </div>
+</div>
+</div>
+</section>
+<!-- Section 2: PREDICTIVE CRIME HEATMAP DEEP-DIVE -->
+<section class="py-32 px-10 relative overflow-hidden bg-background">
+<div class="max-w-[1600px] mx-auto grid grid-cols-12 gap-8">
+<div class="col-span-12 space-y-4 mb-12">
+<span class="text-primary font-data-mono text-sm font-bold uppercase tracking-[0.4em]">[ GEO-SPATIAL ANOMALY CORE ]</span>
+<h2 class="text-6xl font-bold tracking-tighter">KARNATAKA HEATMAP ANALYSIS</h2>
+</div>
+<div class="col-span-12 lg:col-span-8 relative rounded-3xl overflow-hidden border border-white/10 h-[800px] group">
+<img alt="Karnataka Crime Heatmap" class="w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110" src="https://lh3.googleusercontent.com/aida/AP1WRLvK-ISeQ2G5t8HBEHPki_2_f9xog1ut9PxviecM9l5DAqKc98ZudC8VAXyqkiC5Qt-00DDDb5sFqcgFXhoxtl6WC_1sAAXnct-_6VxsAzvcIfwOfyCoxn9puE3gheU-m23JvZiRQVcDyJu99GigxMZZKjKzsgZEO-LgKwadYSkf4JnDMxMxuq9XKrgxo9ekYauKCRX3tKwevWliAycSGSF0p_QNsrU6mFSzyhFjFeH447V812UK1A0qc9hk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+<!-- Floating Data Cards -->
+<div class="absolute top-8 right-8 w-64 space-y-4">
+<div class="liquid-glass p-5 border-l-2 border-primary">
+<h4 class="text-primary font-data-mono text-[10px] font-bold uppercase">Active Hotspot Monitoring</h4>
+<div class="text-2xl font-bold mt-1">42 Clusters</div>
+<p class="text-[9px] text-white/40 font-data-mono mt-1">REAL-TIME THERMAL DRIFT: ACTIVE</p>
+</div>
+<div class="liquid-glass p-5 border-l-2 border-tertiary">
+<h4 class="text-tertiary font-data-mono text-[10px] font-bold uppercase">Regional Risk Index</h4>
+<div class="text-2xl font-bold mt-1">8.9/10</div>
+<p class="text-[9px] text-white/40 font-data-mono mt-1">PEAK ANOMALY: BENGALURU_SOUTH</p>
+</div>
+</div>
+<div class="absolute bottom-8 left-8 flex gap-4">
+<div class="liquid-glass px-6 py-3 border border-white/10 flex items-center gap-3">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+<span class="font-data-mono text-[10px] uppercase">Node_01: Online</span>
+</div>
+<div class="liquid-glass px-6 py-3 border border-white/10 flex items-center gap-3">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+<span class="font-data-mono text-[10px] uppercase">High Risk Detection: Active</span>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
+<div class="liquid-glass p-8 flex-1 flex flex-col border border-white/10">
+<div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+<h3 class="font-data-mono text-xs font-bold uppercase tracking-widest">District Intel Feed</h3>
+<span class="text-primary text-[10px] animate-pulse">LIVE_STREAM</span>
+</div>
+<div class="flex-1 overflow-y-auto space-y-4 data-stream font-data-mono max-h-[500px]">
+<div class="p-4 bg-white/5 border-l-2 border-primary">
+<div class="flex justify-between text-[9px] text-primary mb-1"><span>BENGALURU</span><span>02:14:10</span></div>
+<p class="text-xs font-bold">UNUSUAL CLUSTERING DETECTED</p>
+<p class="text-[10px] text-white/40">Sector 4-B: Social unrest probability 78%.</p>
+</div>
+<div class="p-4 bg-white/5 border-l-2 border-white/10">
+<div class="flex justify-between text-[9px] text-white/40 mb-1"><span>MYSURU</span><span>02:12:45</span></div>
+<p class="text-xs font-bold">ASSET RE-DEPLOYMENT</p>
+<p class="text-[10px] text-white/40">Drone Unit #19 repositioned to Chamundi Hill.</p>
+</div>
+<div class="p-4 bg-white/5 border-l-2 border-orange-500">
+<div class="flex justify-between text-[9px] text-orange-500 mb-1"><span>BELAGAVI</span><span>02:08:12</span></div>
+<p class="text-xs font-bold">CROSS-BORDER ANOMALY</p>
+<p class="text-[10px] text-white/40">Vehicle ID mismatch at border checkpoint B-12.</p>
+</div>
+<div class="p-4 bg-white/5 border-l-2 border-primary">
+<div class="flex justify-between text-[9px] text-primary mb-1"><span>HUBBALLI</span><span>01:55:30</span></div>
+<p class="text-xs font-bold">PRIORITY ALPHA SIGNAL</p>
+<p class="text-[10px] text-white/40">Thermal signature match for Target_ID: 9921.</p>
+</div>
+</div>
+<button class="mt-6 w-full py-4 bg-white/5 border border-white/10 font-data-mono text-[10px] uppercase tracking-widest hover:bg-primary/20 transition-all">Request Deep Sector Scan</button>
+</div>
+<div class="liquid-glass p-8 border border-white/10">
+<div class="flex items-center gap-4 text-white/40">
+<span class="material-symbols-outlined">security</span>
+<div class="text-[10px] font-data-mono leading-tight uppercase">
+                            Authorized viewing only.<br/>Encryption Layer: 0x9.v2
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: ELITE MOST WANTED & MAIN SUSPECTS -->
+<section class="py-32 px-10 bg-deep-navy border-y border-white/5" id="protocols">
+<div class="max-w-[1600px] mx-auto space-y-16">
+<div class="text-center space-y-4">
+<span class="text-primary font-data-mono text-sm font-bold uppercase tracking-[0.4em]">Biometric Priority List</span>
+<h2 class="text-6xl font-bold tracking-tighter">PRIORITY ALPHA TARGETS</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Target Card 1 -->
+<div class="liquid-glass p-6 group cursor-pointer hover:border-primary/50 transition-all border border-white/5">
+<div class="relative h-64 mb-6 overflow-hidden rounded-lg bg-black/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-7xl text-white/5 group-hover:text-primary/20 transition-colors">person</span>
+<div class="absolute inset-0 scanner-beam opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute top-4 right-4 bg-primary text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest">WANTED</div>
+<div class="absolute bottom-4 left-4 font-data-mono text-[10px] text-white/60">BIOMETRIC_REF: 0xAF22</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-bold tracking-tight">V. REDDY [ALIAS]</h3>
+<div class="text-right">
+<div class="text-primary font-data-mono text-xs font-bold">94.2%</div>
+<div class="text-[8px] text-white/40 font-data-mono uppercase">Neural Threat</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 font-data-mono text-[9px] text-white/40">
+<div class="p-2 bg-white/5">Last Known: Koramangala</div>
+<div class="p-2 bg-white/5">Escalation: Level IV</div>
+</div>
+<button class="w-full py-3 border border-white/10 font-data-mono text-[10px] uppercase hover:bg-primary transition-colors">View Forensic Profile</button>
+</div>
+</div>
+<!-- Target Card 2 -->
+<div class="liquid-glass p-6 group cursor-pointer hover:border-primary/50 transition-all border border-white/5">
+<div class="relative h-64 mb-6 overflow-hidden rounded-lg bg-black/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-7xl text-white/5 group-hover:text-primary/20 transition-colors">person</span>
+<div class="absolute inset-0 scanner-beam opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute top-4 right-4 bg-primary text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest">WANTED</div>
+<div class="absolute bottom-4 left-4 font-data-mono text-[10px] text-white/60">BIOMETRIC_REF: 0x88BC</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-bold tracking-tight">K. MALIK</h3>
+<div class="text-right">
+<div class="text-primary font-data-mono text-xs font-bold">89.8%</div>
+<div class="text-[8px] text-white/40 font-data-mono uppercase">Neural Threat</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 font-data-mono text-[9px] text-white/40">
+<div class="p-2 bg-white/5">Last Known: Hubballi</div>
+<div class="p-2 bg-white/5">Escalation: Level III</div>
+</div>
+<button class="w-full py-3 border border-white/10 font-data-mono text-[10px] uppercase hover:bg-primary transition-colors">View Forensic Profile</button>
+</div>
+</div>
+<!-- Target Card 3 -->
+<div class="liquid-glass p-6 group cursor-pointer hover:border-primary/50 transition-all border border-white/5">
+<div class="relative h-64 mb-6 overflow-hidden rounded-lg bg-black/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-7xl text-white/5 group-hover:text-primary/20 transition-colors">person</span>
+<div class="absolute inset-0 scanner-beam opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute top-4 right-4 bg-orange-500 text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest">FLAGGED</div>
+<div class="absolute bottom-4 left-4 font-data-mono text-[10px] text-white/60">BIOMETRIC_REF: 0xCC11</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-bold tracking-tight">S. DAS</h3>
+<div class="text-right">
+<div class="text-orange-500 font-data-mono text-xs font-bold">72.4%</div>
+<div class="text-[8px] text-white/40 font-data-mono uppercase">Neural Threat</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 font-data-mono text-[9px] text-white/40">
+<div class="p-2 bg-white/5">Last Known: Mangaluru</div>
+<div class="p-2 bg-white/5">Escalation: Level II</div>
+</div>
+<button class="w-full py-3 border border-white/10 font-data-mono text-[10px] uppercase hover:bg-primary transition-colors">View Forensic Profile</button>
+</div>
+</div>
+<!-- Target Card 4 -->
+<div class="liquid-glass p-6 group cursor-pointer hover:border-primary/50 transition-all border border-white/5">
+<div class="relative h-64 mb-6 overflow-hidden rounded-lg bg-black/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-7xl text-white/5 group-hover:text-primary/20 transition-colors">person</span>
+<div class="absolute inset-0 scanner-beam opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="absolute top-4 right-4 bg-primary text-white text-[9px] font-bold px-2 py-1 uppercase tracking-widest">WANTED</div>
+<div class="absolute bottom-4 left-4 font-data-mono text-[10px] text-white/60">BIOMETRIC_REF: 0x9090</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<h3 class="text-xl font-bold tracking-tight">UNKNOWN_SIG</h3>
+<div class="text-right">
+<div class="text-primary font-data-mono text-xs font-bold">99.1%</div>
+<div class="text-[8px] text-white/40 font-data-mono uppercase">Neural Threat</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 font-data-mono text-[9px] text-white/40">
+<div class="p-2 bg-white/5">Last Known: Bengaluru</div>
+<div class="p-2 bg-white/5">Escalation: Level V</div>
+</div>
+<button class="w-full py-3 border border-white/10 font-data-mono text-[10px] uppercase hover:bg-primary transition-colors">View Forensic Profile</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: PRECISION FORENSICS HUB -->
+<section class="py-32 px-10 relative bg-background" id="forensics">
+<div class="max-w-[1600px] mx-auto grid grid-cols-12 gap-16 items-center">
+<div class="col-span-12 lg:col-span-5 space-y-8">
+<span class="text-tertiary font-data-mono text-sm font-bold uppercase tracking-[0.4em] border-b-2 border-tertiary pb-2">Forensic Analysis Lab</span>
+<h2 class="text-6xl font-bold tracking-tighter leading-tight">NEURAL FIBER &amp; BIOMETRIC MAPPING</h2>
+<p class="text-xl text-white/60 font-light leading-relaxed">
+                    Correlation of molecular fiber data, ballistic trajectories, and digital footprint vectors into unified evidentiary packets.
+                </p>
+<div class="grid grid-cols-1 gap-4 pt-4">
+<div class="liquid-glass p-6 border-l-4 border-tertiary flex justify-between items-center group cursor-pointer hover:bg-white/5">
+<div class="space-y-1">
+<h4 class="font-bold text-lg uppercase tracking-tight">DNA Synthesis</h4>
+<p class="text-[10px] text-white/40 font-data-mono">SEQUENCE MATCH LATENCY: 0.04ms</p>
+</div>
+<span class="material-symbols-outlined text-tertiary">biotech</span>
+</div>
+<div class="liquid-glass p-6 border-l-4 border-primary flex justify-between items-center group cursor-pointer hover:bg-white/5">
+<div class="space-y-1">
+<h4 class="font-bold text-lg uppercase tracking-tight">Ballistic Correlation</h4>
+<p class="text-[10px] text-white/40 font-data-mono">CALIBER SIGNATURE MATCH: 99.8%</p>
+</div>
+<span class="material-symbols-outlined text-primary">target</span>
+</div>
+<div class="liquid-glass p-6 border-l-4 border-white/20 flex justify-between items-center group cursor-pointer hover:bg-white/5">
+<div class="space-y-1">
+<h4 class="font-bold text-lg uppercase tracking-tight">Digital Footprint Trace</h4>
+<p class="text-[10px] text-white/40 font-data-mono">IP_MESH_HOP_COUNT: 14</p>
+</div>
+<span class="material-symbols-outlined text-white/40">language</span>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-7">
+<div class="liquid-glass p-2 rounded-3xl group relative overflow-hidden glow-border-cyan">
+<img alt="Precision Forensics Hub" class="w-full h-auto rounded-2xl group-hover:scale-105 transition-transform duration-[4s]" src="https://lh3.googleusercontent.com/aida/AP1WRLvQUQqj7lp2_UfteqdlHPwe6ZxWDOgGx0U_KkUe_6zmit0Wxn53xtNHlV8IJmX2QaU5lUKFt99-sSLvZkN5l-Lu7wO-5Yu1t3_grlTq5tTpBjINla0BZP61cYP0aV7oq3q6xixQG6QZdn6MB-H7yqQHFIHNCuvR6wtwB_YpMxZSFTRWge2zr-AhRsdGSGbRV9WM6ufZ0l2a_UL33-gEayGJbYAs-iNGxC_SPP3m852bUVz0Mc2m-SvGnnl0"/>
+<div class="absolute top-8 left-8 p-4 liquid-glass border border-white/10 font-data-mono text-[9px] uppercase space-y-2">
+<div class="flex gap-2"><span>KERNEL:</span><span class="text-tertiary">ANALYSIS_MODE_v4</span></div>
+<div class="flex gap-2"><span>OBJECT:</span><span>UNIDENTIFIED_FIBER_B</span></div>
+<div class="flex gap-2"><span>SOURCE:</span><span>SECTOR_09_SCENE</span></div>
+</div>
+</div>
+</div>
+</div>
+</section><section class="py-32 px-10 bg-deep-navy relative overflow-hidden border-y border-white/5" id="dna-deep-dive">
+<div class="scanner-beam"></div>
+<div class="max-w-[1600px] mx-auto space-y-16 relative z-20">
+<div class="space-y-4">
+<span class="text-tertiary font-data-mono text-sm font-bold uppercase tracking-[0.4em]">[ MOLECULAR INTELLIGENCE CORE ]</span>
+<h2 class="text-6xl font-bold tracking-tighter">NEURAL DNA SYNTHESIS &amp; SEQUENCE ANALYSIS</h2>
+<p class="text-xl text-white/60 font-light max-w-4xl">Advanced molecular deconvolution of trace forensic evidence for high-certainty suspect identification.</p>
+</div>
+<div class="liquid-glass p-12 rounded-3xl border border-white/10 glow-border-cyan grid grid-cols-12 gap-12">
+<!-- Left Side: Helix Visualization -->
+<div class="col-span-12 lg:col-span-7 relative h-[500px] bg-black/40 rounded-2xl overflow-hidden border border-white/5 flex items-center justify-center">
+<div class="absolute inset-0 tactical-grid opacity-20"></div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-9xl text-tertiary animate-pulse">dna</span>
+<div class="mt-8 grid grid-cols-2 gap-8 font-data-mono text-[10px] uppercase">
+<div class="p-4 liquid-glass border-l-2 border-tertiary">
+<div class="text-white/40">Allelic Frequency</div>
+<div class="text-xl font-bold text-tertiary">0.00042%</div>
+</div>
+<div class="p-4 liquid-glass border-l-2 border-primary">
+<div class="text-white/40">Locus Detection</div>
+<div class="text-xl font-bold text-primary">99.8%</div>
+</div>
+</div>
+</div>
+<div class="absolute top-4 left-4 font-data-mono text-[9px] text-white/20">
+          SEQ_ID: KSP_DNA_88291 // BUFFER: STABLE // TEMP: 37.0C
+        </div>
+</div>
+<!-- Right Side: Genetic Profile Markers -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<h3 class="font-data-mono text-xs font-bold uppercase tracking-widest text-white/40 border-b border-white/10 pb-2">Genetic Profile Markers</h3>
+<div class="grid grid-cols-1 gap-3">
+<div class="flex justify-between items-center p-4 bg-white/5 border border-white/5 font-data-mono text-xs">
+<span class="text-white/60">D3S1358</span>
+<span class="text-tertiary">[ 15, 17 ]</span>
+<span class="text-[10px] text-green-500">CONFIRMED</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-white/5 border border-white/5 font-data-mono text-xs">
+<span class="text-white/60">vWA</span>
+<span class="text-tertiary">[ 14, 19 ]</span>
+<span class="text-[10px] text-green-500">CONFIRMED</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-white/5 border border-white/5 font-data-mono text-xs">
+<span class="text-white/60">FGA</span>
+<span class="text-tertiary">[ 21, 24 ]</span>
+<span class="text-[10px] text-green-500">CONFIRMED</span>
+</div>
+<div class="flex justify-between items-center p-4 bg-white/5 border border-white/5 font-data-mono text-xs">
+<span class="text-white/60">D8S1179</span>
+<span class="text-primary">[ 12, 13 ]</span>
+<span class="text-[10px] text-primary animate-pulse">ANOMALY</span>
+</div>
+</div>
+<!-- Bottom: Suspect Matching Engine -->
+<div class="mt-8 p-6 bg-primary/10 border border-primary/20 rounded-xl space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-data-mono text-[10px] font-bold uppercase text-primary">Suspect Matching Engine</h4>
+<span class="text-[10px] font-data-mono text-white/40">TARGET_ID: K-8842</span>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between font-data-mono text-[9px] uppercase"><span>Sequence Cross-Reference</span><span>84%</span></div>
+<div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%] animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: QUANTUM PREDICTIVE ANALYTICS -->
+<section class="py-32 px-10 bg-deep-navy border-t border-white/5 relative" id="predictions">
+<div class="max-w-[1600px] mx-auto space-y-20">
+<div class="flex flex-col lg:flex-row justify-between items-end gap-8">
+<div class="space-y-4">
+<span class="text-primary font-data-mono text-sm font-bold uppercase tracking-[0.4em]">Advanced Simulation Core</span>
+<h2 class="text-6xl font-bold tracking-tighter">FUTURE PROBABILITY WAVE</h2>
+</div>
+<div class="flex gap-8 font-data-mono text-[10px] text-white/40 uppercase">
+<div class="flex flex-col items-end">
+<span class="text-white">Detection Horizon</span>
+<span>72 Hours Out</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-white">Simulations / Sec</span>
+<span class="text-primary">1.4 Million</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<div class="col-span-12 lg:col-span-8 liquid-glass p-4 rounded-3xl overflow-hidden border border-white/5 relative group">
+<img alt="Quantum Predictive Analytics" class="w-full h-full object-cover rounded-2xl opacity-80 group-hover:scale-105 transition-transform duration-[3s]" src="https://lh3.googleusercontent.com/aida/AP1WRLtS_PsXfNJevMt6tQWd1_Bk4cmyfpwpdmuKUisqEA_1JwQNj8J0ngwivvTmS2QA-JxbBDTZCrP5yOd3jNncftQb9ofPzZ2PdB2odmL38NZqUwtLnNHrAmd3owzzfDGFubBJsd4bl7-h2_qJnF_SSlk1gG_sn1PXPOjiCjLgxcjqQTDfXsZFq3XWJNnR3kUcgpbu21CJB9BJrShbpN9SFcu9f5K7TnlhOaQgTxI4xezd8DXOoX6uCDwJ6pdK"/>
+<div class="absolute inset-0 bg-gradient-to-r from-deep-navy via-transparent to-transparent"></div>
+<div class="absolute inset-y-0 left-0 w-1/3 p-12 flex flex-col justify-center space-y-8">
+<div class="space-y-4">
+<h3 class="text-3xl font-bold leading-tight">TEMPORAL RISK BIAS</h3>
+<p class="text-xs text-white/50 leading-relaxed font-data-mono">Quantum engine processing 3D histograms of crime density. Shifting waves visualize likelihood of future incidents.</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between font-data-mono text-[9px] uppercase"><span>Temporal Accuracy</span><span>96.8%</span></div>
+<div class="w-full bg-white/5 h-1"><div class="bg-primary h-full w-[96.8%]"></div></div>
+</div>
+<button class="bg-white text-deep-navy font-data-mono text-xs px-8 py-4 uppercase tracking-widest hover:bg-primary hover:text-white transition-colors">Run Simulator</button>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<div class="liquid-glass p-8 flex-1 border border-white/5 flex flex-col justify-center items-center text-center space-y-6">
+<div class="w-32 h-32 rounded-full border-4 border-tertiary/20 flex items-center justify-center relative">
+<span class="material-symbols-outlined text-4xl text-tertiary">query_stats</span>
+<div class="absolute inset-0 border-t-4 border-tertiary rounded-full animate-spin"></div>
+</div>
+<div class="space-y-2">
+<h4 class="text-xl font-bold uppercase tracking-widest">Radar Analysis</h4>
+<p class="text-[10px] text-white/40 font-data-mono">Current operational focus: North-East Bengaluru</p>
+</div>
+</div>
+<div class="liquid-glass p-8 border border-white/5 space-y-4">
+<h4 class="font-data-mono text-[10px] uppercase text-white/40 tracking-widest">System Telemetry</h4>
+<div class="space-y-2 font-data-mono text-[9px] text-white/20">
+<div class="flex justify-between"><span>Kernel Sync</span><span class="text-green-500">READY</span></div>
+<div class="flex justify-between"><span>Cache Load</span><span>0.12ms</span></div>
+<div class="flex justify-between"><span>Grid Uptime</span><span>99.999%</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 6: CRIME DATA EXPORTER & ARCHIVE -->
+<section class="py-32 px-10 bg-background border-t border-white/5">
+<div class="max-w-[1600px] mx-auto grid grid-cols-12 gap-12">
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<div class="space-y-4">
+<span class="text-white/40 font-data-mono text-sm font-bold uppercase tracking-[0.4em]">Official Archives</span>
+<h2 class="text-5xl font-bold tracking-tighter">DATA EXPORT PROTOCOL</h2>
+</div>
+<div class="liquid-glass p-8 border-l-4 border-primary space-y-6">
+<p class="text-sm text-white/60 leading-relaxed font-data-mono">
+                        Generate and export encrypted intelligence dossiers directly to SCRB (State Crime Records Bureau). All exports are logged and tagged with officer credentials.
+                    </p>
+<div class="flex items-center gap-4">
+<img alt="KSP Crest" class="w-16 h-16 object-contain grayscale brightness-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBIichaATF1buKjWUQtgSe8wSucA6KW9GMxNV7EfP36ZVgCoi4M74JIddmHa7UioETUWiVFopfKx2DE6OEZSp0pqvD_4nmGek-CfxagAH2HZJR7x_CRmDLCImQqbmwCtyLXqltzu0pakN2ciYX9Ggyur2lUSiBY1dM0iRcBVdZnaEssde35nFVoqIbG8BW5cA8vxidNuKGGs8vI7QmblfKOA4uMlHqev66bcm6hO9CnSlRb5Q6fOXxMg"/>
+<div class="text-[9px] font-data-mono text-white/20 uppercase leading-tight">
+                            KARNATAKA STATE POLICE<br/>VIGILANT INTELLIGENCE UNIT<br/>OFFICIAL STAMP_VALID
+                        </div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-8 liquid-glass p-8 border border-white/10 flex flex-col">
+<div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+<h3 class="font-data-mono text-xs uppercase tracking-widest">Recent Intelligence Dossiers</h3>
+<div class="flex gap-4">
+<button class="text-[10px] font-data-mono text-white/40 hover:text-white uppercase">Refresh Archive</button>
+<button class="text-[10px] font-data-mono text-primary uppercase">Sync All to SCRB</button>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Dossier Item -->
+<div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 hover:border-white/20 transition-all group">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">folder_zip</span>
+<div class="space-y-1">
+<h4 class="text-sm font-bold uppercase font-data-mono">INCIDENT_LOG_2024_08_12_BENGALURU</h4>
+<div class="flex gap-4 text-[9px] text-white/40 font-data-mono uppercase">
+<span>Size: 124MB</span>
+<span>Classification: Secret</span>
+<span>Hash: 0x88F...</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-4 py-2 bg-white/10 text-[9px] font-data-mono uppercase hover:bg-white/20 transition-all">Download</button>
+<button class="px-4 py-2 bg-primary/20 text-primary text-[9px] font-data-mono uppercase hover:bg-primary hover:text-white transition-all">Sync to SCRB</button>
+</div>
+</div>
+<!-- Dossier Item 2 -->
+<div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 hover:border-white/20 transition-all group">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-white/20 group-hover:text-tertiary transition-colors">folder_zip</span>
+<div class="space-y-1">
+<h4 class="text-sm font-bold uppercase font-data-mono">FORENSIC_PROFILE_TARGET_0xAF22</h4>
+<div class="flex gap-4 text-[9px] text-white/40 font-data-mono uppercase">
+<span>Size: 89MB</span>
+<span>Classification: Top Secret</span>
+<span>Hash: 0xCC2...</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-4 py-2 bg-white/10 text-[9px] font-data-mono uppercase hover:bg-white/20 transition-all">Download</button>
+<button class="px-4 py-2 bg-primary/20 text-primary text-[9px] font-data-mono uppercase hover:bg-primary hover:text-white transition-all">Sync to SCRB</button>
+</div>
+</div>
+<!-- Dossier Item 3 -->
+<div class="flex items-center justify-between p-6 bg-white/5 border border-white/5 hover:border-white/20 transition-all group">
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">folder_zip</span>
+<div class="space-y-1">
+<h4 class="text-sm font-bold uppercase font-data-mono">REGIONAL_RISK_SUMMARY_Q3_MYSURU</h4>
+<div class="flex gap-4 text-[9px] text-white/40 font-data-mono uppercase">
+<span>Size: 412MB</span>
+<span>Classification: Official</span>
+<span>Hash: 0x11A...</span>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-4 py-2 bg-white/10 text-[9px] font-data-mono uppercase hover:bg-white/20 transition-all">Download</button>
+<button class="px-4 py-2 bg-primary/20 text-primary text-[9px] font-data-mono uppercase hover:bg-primary hover:text-white transition-all">Sync to SCRB</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 7: OPERATIONAL FLOW-TRACE (Modified for length/style) -->
+<section class="py-32 px-10 bg-deep-navy relative overflow-hidden">
+<div class="max-w-5xl mx-auto space-y-20 relative z-10">
+<div class="text-center">
+<span class="text-primary font-data-mono text-sm font-bold uppercase tracking-[0.4em]">The Lifecycle of Vigilance</span>
+<h2 class="text-5xl font-bold tracking-tighter mt-4">OPERATIONAL FLOW-TRACE</h2>
+</div>
+<div class="relative">
+<div class="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-primary via-tertiary to-white/5"></div>
+<div class="space-y-32">
+<div class="relative flex justify-between items-center w-full group">
+<div class="w-5/12 text-right space-y-2">
+<span class="font-data-mono text-xs text-primary">STAGE_01</span>
+<h4 class="text-2xl font-bold uppercase tracking-tighter">Data Ingestion</h4>
+<p class="text-sm text-white/50 leading-relaxed">Raw signals from 14,200 sensors and 31 district nodes are funneled into the central core.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 w-14 h-14 liquid-glass rounded-full border-2 border-primary flex items-center justify-center z-10 group-hover:scale-125 transition-transform bg-background">
+<span class="material-symbols-outlined text-sm text-primary">input</span>
+</div>
+<div class="w-5/12"></div>
+</div>
+<div class="relative flex justify-between items-center w-full group">
+<div class="w-5/12"></div>
+<div class="absolute left-1/2 -translate-x-1/2 w-14 h-14 liquid-glass rounded-full border-2 border-tertiary flex items-center justify-center z-10 group-hover:scale-125 transition-transform bg-background">
+<span class="material-symbols-outlined text-sm text-tertiary">analytics</span>
+</div>
+<div class="w-5/12 space-y-2">
+<span class="font-data-mono text-xs text-tertiary">STAGE_02</span>
+<h4 class="text-2xl font-bold uppercase tracking-tighter">Neural Evaluation</h4>
+<p class="text-sm text-white/50 leading-relaxed">AI models correlate signals against 4.2 million historical crime patterns to identify predictive anomalies.</p>
+</div>
+</div>
+<div class="relative flex justify-between items-center w-full group">
+<div class="w-5/12 text-right space-y-2">
+<span class="font-data-mono text-xs text-orange-500">STAGE_03</span>
+<h4 class="text-2xl font-bold uppercase tracking-tighter">Kinetic Posturing</h4>
+<p class="text-sm text-white/50 leading-relaxed">Automated alerts are dispatched to ground units. Drones are rerouted for high-precision verification.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 w-14 h-14 liquid-glass rounded-full border-2 border-orange-500 flex items-center justify-center z-10 group-hover:scale-125 transition-transform bg-background">
+<span class="material-symbols-outlined text-sm text-orange-500">bolt</span>
+</div>
+<div class="w-5/12"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-deep-navy border-t border-white/5 pt-32 pb-16 px-10">
+<div class="max-w-[1600px] mx-auto space-y-24">
+<div class="grid grid-cols-12 gap-12 items-center">
+<div class="col-span-12 lg:col-span-7 space-y-10">
+<div class="flex items-center gap-8">
+<img alt="KSP Crest" class="w-32 h-32 object-contain grayscale brightness-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBIichaATF1buKjWUQtgSe8wSucA6KW9GMxNV7EfP36ZVgCoi4M74JIddmHa7UioETUWiVFopfKx2DE6OEZSp0pqvD_4nmGek-CfxagAH2HZJR7x_CRmDLCImQqbmwCtyLXqltzu0pakN2ciYX9Ggyur2lUSiBY1dM0iRcBVdZnaEssde35nFVoqIbG8BW5cA8vxidNuKGGs8vI7QmblfKOA4uMlHqev66bcm6hO9CnSlRb5Q6fOXxMg"/>
+<div class="space-y-2">
+<h2 class="text-5xl font-bold tracking-tighter">A PARTNERSHIP FORGED IN <span class="text-primary">VIGILANCE</span>.</h2>
+<p class="text-white/40 font-data-mono text-xs tracking-widest uppercase">Honoring the Karnataka State Police Force</p>
+</div>
+</div>
+<p class="text-2xl text-white/30 italic leading-relaxed max-w-4xl">
+                    "We extend our deepest gratitude to the Karnataka State Police for their commitment to innovation and public safety. KAVACH AI stands as a silent sentinel, empowered by your bravery."
+                </p>
+<div class="flex gap-12 font-data-mono text-[10px] tracking-[0.3em] uppercase text-white/40">
+<div class="flex items-center gap-3"><span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span> SYSTEM STANDING BY</div>
+<div class="flex items-center gap-3"><span class="w-2 h-2 bg-tertiary rounded-full"></span> NEURAL SYNC ACTIVE</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+<div class="liquid-glass p-8 space-y-4 border border-white/5">
+<h5 class="font-data-mono text-xs uppercase tracking-widest text-primary">Deployment Hub</h5>
+<div class="grid grid-cols-2 gap-4">
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Intelligence Briefings</a>
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Resource Allocation</a>
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Asset Directory</a>
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Internal Support</a>
+</div>
+</div>
+<div class="liquid-glass p-8 space-y-4 border border-white/5">
+<h5 class="font-data-mono text-xs uppercase tracking-widest text-tertiary">Legal &amp; Secure</h5>
+<div class="grid grid-cols-2 gap-4">
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Privacy Encryption</a>
+<a class="text-sm text-white/40 hover:text-white border-b border-white/5 pb-2 transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-white/5 pt-16 flex flex-col md:flex-row justify-between items-center gap-8 font-data-mono text-[10px] text-white/20 uppercase tracking-[0.2em]">
+<p>© 2024 Karnataka State Police - Vigilant Intelligence Unit. Powered by KAVACH AI Core.</p>
+<div class="flex gap-12">
+<span>SYSTEM_HASH: 0x8823FFA1_CRIME_NET</span>
+<span class="text-primary">STATUS: COMBAT_READY</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+    // Smooth movement for angled panels based on mouse position
+    document.addEventListener('mousemove', (e) => {
+        const panels = document.querySelectorAll('.angled-panel');
+        const x = (window.innerWidth / 2 - e.pageX) / 80;
+        const y = (window.innerHeight / 2 - e.pageY) / 80;
+        
+        panels.forEach(panel => {
+            panel.style.transform = `rotateX(${y}deg) rotateY(${-x}deg)`;
+        });
+    });
+
+    // Simple scroll spy for header nav
+    window.addEventListener('scroll', () => {
+        const sections = ['intelligence', 'forensics', 'predictions', 'protocols'];
+        const scrollPos = window.scrollY + 100;
+        
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+                document.querySelectorAll('header nav a').forEach(a => {
+                    a.classList.remove('text-primary', 'border-primary');
+                    a.classList.add('text-white/60');
+                    if (a.getAttribute('href') === `#${id}`) {
+                        a.classList.add('text-primary', 'border-primary');
+                        a.classList.remove('text-white/60');
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body></html>

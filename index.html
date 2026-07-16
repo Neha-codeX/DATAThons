@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KAVACH AI | Karnataka State Crime Intelligence Platform | KSP DataThon 2025</title>
+<meta name="description" content="KAVACH AI is a state-of-the-art Crime Intelligence & Analytical Platform for the Karnataka State Police, integrating AI/ML, sociological insights, and criminological intelligence to transform reactive policing into proactive crime prevention." />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #030102;
+  --bg2: #090305;
+  --surface: rgba(14, 6, 8, 0.65);
+  --surface2: rgba(22, 10, 14, 0.8);
+  --primary: #ff3b30;     /* Neon Red / Crimson */
+  --primary-light: #ff6b63;
+  --secondary: #ff9500;   /* Neon Orange / Tactical Alert */
+  --tertiary: #34c759;    /* Neon Green / Secure Active */
+  --cyan: #30d158;        /* Bright Green */
+  --red: #ff3b30;
+  --amber: #ff9500;
+  --green: #34c759;
+  --text: #f5f5f7;
+  --text-muted: #a1a1aa;
+  --text-dim: #52525b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(255, 59, 48, 0.45);
+  --glow-red: rgba(255, 59, 48, 0.35);
+  --glow-orange: rgba(255, 149, 0, 0.3);
+  --glow-green: rgba(52, 199, 89, 0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  line-height: 1.6;
+  perspective: 1200px; /* Enable global 3D environment */
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 999px; }
+
+/* ===== 3D CANVAS BACKGROUND ===== */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: auto; /* Allow mouse interaction directly with tesseract */
+}
+
+/* ===== LAYOUT ===== */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+.section { position: relative; z-index: 1; }
+
+/* ===== ULTRA-PREMIUM LIQUID GLASS ===== */
+.glass {
+  background: linear-gradient(135deg, rgba(24, 10, 12, 0.65), rgba(12, 5, 6, 0.45));
+  backdrop-filter: blur(40px) saturate(240%);
+  -webkit-backdrop-filter: blur(40px) saturate(240%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-top-color: rgba(255, 255, 255, 0.18);
+  border-left-color: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 10px 20px rgba(255, 255, 255, 0.02),
+    0 15px 35px rgba(0, 0, 0, 0.65);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              border-color 0.3s, 
+              box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+.glass::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(
+    45deg, 
+    transparent 45%, 
+    rgba(255, 255, 255, 0.04) 48%, 
+    rgba(255, 255, 255, 0.09) 50%, 
+    rgba(255, 255, 255, 0.04) 52%, 
+    transparent 55%
+  );
+  transform: rotate(30deg);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+.glass:hover {
+  border-color: var(--border-active);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.22),
+    0 0 30px var(--glow-red), 
+    inset 0 0 20px rgba(255, 255, 255, 0.03),
+    0 20px 45px rgba(0, 0, 0, 0.75);
+}
+.glass:hover::before {
+  transform: translate(30%, 30%) rotate(30deg);
+}
+
+.glass-glow-cyan { border-color: rgba(52, 199, 89, 0.3); box-shadow: 0 0 20px var(--glow-green); }
+.glass-glow-red { border-color: rgba(255, 59, 48, 0.35); box-shadow: 0 0 20px var(--glow-red); }
+.glass-glow-blue { border-color: rgba(255, 149, 0, 0.3); box-shadow: 0 0 25px var(--glow-orange); }
+
+/* ===== TYPOGRAPHY ===== */
+.font-hero {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+.font-h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: -0.03em; }
+.font-h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; letter-spacing: -0.02em; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.gradient-text {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff9500 50%, #34c759 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gradient-text-red {
+  background: linear-gradient(135deg, #ff3b30, #ff9500, #ff453a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-shadow: 0 0 10px rgba(255, 149, 0, 0.35);
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  box-shadow: 0 0 30px rgba(255, 59, 48, 0.45);
+}
+.btn-primary:hover {
+  transform: translateY(-2px) translateZ(15px);
+  box-shadow: 0 0 50px rgba(255, 59, 48, 0.7);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 14px 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.btn-ghost:hover { 
+  background: rgba(255, 255, 255, 0.07); 
+  border-color: var(--secondary); 
+  box-shadow: 0 0 20px rgba(255, 149, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ===== STATUS BADGE ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(5px);
+}
+.badge-live { background: rgba(52, 199, 89, 0.15); color: #30d158; border: 1px solid rgba(52, 199, 89, 0.35); box-shadow: 0 0 10px rgba(52, 199, 89, 0.2); }
+.badge-warn { background: rgba(255, 149, 0, 0.15); color: #ff9f0a; border: 1px solid rgba(255, 149, 0, 0.35); box-shadow: 0 0 10px rgba(255, 149, 0, 0.2); }
+.badge-danger { background: rgba(255, 59, 48, 0.15); color: #ff453a; border: 1px solid rgba(255, 59, 48, 0.35); box-shadow: 0 0 10px rgba(255, 59, 48, 0.2); }
+.badge-info { background: rgba(255, 149, 0, 0.1); color: #ff9500; border: 1px solid rgba(255, 149, 0, 0.25); }
+.pulse-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+
+/* ===== HEADER ===== */
+header {
+  position: fixed; top: 0; left: 0; width: 100%;
+  z-index: 1000;
+  background: rgba(3, 1, 2, 0.85);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid var(--border);
+  height: 72px;
+  display: flex; align-items: center;
+}
+.nav-inner {
+  display: flex; justify-content: space-between; align-items: center;
+  width: 100%; padding: 0 40px;
+}
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+}
+.logo-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 20px rgba(255, 59, 48, 0.55);
+}
+.logo-text { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: -0.02em; color: var(--text); }
+.logo-sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--secondary); letter-spacing: 0.1em; text-transform: uppercase; }
+nav { display: flex; align-items: center; gap: 32px; }
+nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--primary); transform: scaleX(0);
+  transition: transform 0.2s;
+}
+nav a:hover { color: var(--text); }
+nav a:hover::after { transform: scaleX(1); }
+.nav-status {
+  display: flex; align-items: center; gap: 16px;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  color: var(--green);
+}
+
+/* ===== HERO SECTION ===== */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding-top: 72px;
+  position: relative; z-index: 1;
+}
+.hero-inner {
+  max-width: 1400px; width: 100%; margin: 0 auto; padding: 80px 40px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.hero-label { margin-bottom: 24px; }
+.hero-title { font-size: clamp(48px, 6vw, 80px); margin-bottom: 24px; }
+.hero-subtitle { font-size: 18px; color: var(--text-muted); line-height: 1.7; margin-bottom: 40px; max-width: 560px; }
+.hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px;
+}
+.stat-card {
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.6), rgba(14, 6, 8, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.06), 0 8px 24px rgba(0,0,0,0.5);
+}
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ===== 3D COMMAND CARD ===== */
+.command-card {
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.7), rgba(14, 6, 8, 0.5));
+  border: 1px solid rgba(255, 59, 48, 0.35);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 0 60px rgba(255, 59, 48, 0.18), inset 0 0 40px rgba(255,255,255,0.01);
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+  position: relative; overflow: hidden;
+  backdrop-filter: blur(30px);
+}
+.command-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--secondary), transparent);
+}
+.scan-line {
+  position: absolute; top: -100px; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+}
+@keyframes scan { 0% { top: -10px; } 100% { top: 110%; } }
+
+.mini-chart {
+  display: flex; align-items: flex-end; gap: 3px; height: 60px; margin-top: 12px;
+}
+.bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--primary), var(--secondary));
+  border-radius: 3px 3px 0 0;
+  animation: bar-grow 1s ease-out forwards;
+  transform-origin: bottom;
+}
+@keyframes bar-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+.node-grid {
+  display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 12px;
+}
+.node {
+  width: 100%; aspect-ratio: 1; border-radius: 3px;
+  background: rgba(255, 59, 48, 0.15);
+  animation: node-pulse 3s ease-in-out infinite;
+}
+.node.active { background: rgba(52, 199, 89, 0.7); box-shadow: 0 0 6px rgba(52, 199, 89, 0.5); }
+.node.hot { background: rgba(255, 59, 48, 0.8); box-shadow: 0 0 6px rgba(255, 59, 48, 0.6); }
+@keyframes node-pulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+
+.ring-container {
+  display: flex; align-items: center; justify-content: center;
+  margin: 16px 0; position: relative;
+}
+.ring {
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--primary);
+  border-right-color: rgba(255, 59, 48, 0.25);
+  animation: spin 3s linear infinite;
+  position: absolute;
+}
+.ring2 {
+  width: 75px; height: 75px;
+  border-top-color: var(--secondary);
+  border-right-color: rgba(255, 149, 0, 0.25);
+  animation: spin 2s linear infinite reverse;
+}
+.ring-center {
+  width: 50px; height: 50px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+  z-index: 1;
+  box-shadow: 0 0 20px rgba(255, 59, 48, 0.6);
+  color: white;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== SECTION STYLES ===== */
+.section-header { text-align: center; margin-bottom: 64px; }
+.section-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(32px, 4vw, 52px); letter-spacing: -0.03em; margin: 16px 0 20px; }
+.section-desc { font-size: 17px; color: var(--text-muted); max-width: 660px; margin: 0 auto; line-height: 1.7; }
+
+/* ===== CHALLENGE SECTION ===== */
+#challenge { padding: 120px 0; }
+.challenge-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.challenge-card {
+  padding: 32px;
+  position: relative; overflow: hidden;
+}
+.challenge-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+}
+.challenge-card.c1::before { background: linear-gradient(to bottom, var(--red), transparent); }
+.challenge-card.c2::before { background: linear-gradient(to bottom, var(--amber), transparent); }
+.challenge-card.c3::before { background: linear-gradient(to bottom, var(--secondary), transparent); }
+.challenge-card.c4::before { background: linear-gradient(to bottom, var(--tertiary), transparent); }
+.challenge-icon { font-size: 36px; margin-bottom: 16px; }
+.challenge-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 12px; }
+.challenge-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+
+/* ===== SOLUTION SECTION ===== */
+#solution { padding: 120px 0; background: linear-gradient(180deg, transparent, rgba(255, 59, 48, 0.04), transparent); }
+.solution-tabs { display: flex; gap: 8px; margin-bottom: 48px; flex-wrap: wrap; justify-content: center; }
+.tab-btn {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 10px 20px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+  backdrop-filter: blur(10px);
+}
+.tab-btn.active, .tab-btn:hover {
+  background: rgba(255, 59, 48, 0.18); border-color: var(--border-active);
+  color: var(--text);
+  box-shadow: 0 0 15px rgba(255, 59, 48, 0.25);
+}
+.solution-content { display: none; }
+.solution-content.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; animation: fade-in 0.4s ease; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.solution-visual {
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.7), rgba(14, 6, 8, 0.5));
+  border: 1px solid rgba(255, 149, 0, 0.25);
+  border-radius: 16px; padding: 32px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 35px rgba(255, 149, 0, 0.1);
+}
+.solution-visual::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 149, 0, 0.08), transparent 70%);
+}
+.feature-list { list-style: none; }
+.feature-list li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+  font-size: 15px; line-height: 1.6;
+}
+.feature-list li:last-child { border-bottom: none; }
+.feature-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+
+/* ===== CAPABILITIES SECTION ===== */
+#capabilities { padding: 120px 0; }
+.cap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.cap-card {
+  padding: 32px; cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.cap-card:hover { transform: translateY(-6px); }
+.cap-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.cap-card:hover::after { transform: scaleX(1); }
+.cap-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 700;
+  position: absolute; top: 16px; right: 24px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; opacity: 0.15;
+}
+.cap-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+.cap-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 12px; }
+.cap-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+.cap-features { list-style: none; }
+.cap-features li {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-muted);
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex; align-items: center; gap: 8px;
+}
+.cap-features li::before { content: '›'; color: var(--tertiary); font-size: 16px; }
+
+/* ===== AI/ML SECTION ===== */
+#aiml { padding: 120px 0; background: linear-gradient(180deg, transparent, rgba(255, 59, 48, 0.03), transparent); }
+.aiml-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.aiml-models { display: flex; flex-direction: column; gap: 16px; }
+.model-card {
+  padding: 20px 24px; border-radius: 12px;
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.6), rgba(14, 6, 8, 0.4));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+  transition: all 0.3s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.model-card:hover { border-color: rgba(255, 149, 0, 0.4); transform: translateX(6px); }
+.model-icon { font-size: 24px; }
+.model-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 16px; }
+.model-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.model-acc {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px; font-weight: 700;
+  color: var(--green);
+}
+.progress-bar {
+  height: 4px; border-radius: 999px;
+  background: rgba(255,255,255,0.08); overflow: hidden;
+  margin-top: 8px;
+}
+.progress-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  animation: fill-bar 2s ease-out forwards;
+}
+@keyframes fill-bar { from { width: 0; } }
+
+/* ===== WORKFLOW SECTION ===== */
+#workflow { padding: 120px 0; }
+.workflow-timeline {
+  position: relative; max-width: 800px; margin: 0 auto;
+}
+.workflow-line {
+  position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 1px; transform: translateX(-50%);
+  background: linear-gradient(to bottom, transparent, var(--primary), var(--secondary), var(--tertiary), transparent);
+}
+.workflow-step {
+  display: flex; align-items: center; gap: 40px;
+  margin-bottom: 64px; position: relative;
+}
+.workflow-step:nth-child(even) { flex-direction: row-reverse; }
+.workflow-step:nth-child(even) .workflow-text { text-align: right; }
+.workflow-node {
+  width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; z-index: 2;
+  background: #120609;
+  border: 2px solid;
+  box-shadow: 0 0 20px;
+  position: relative;
+}
+.workflow-step:nth-child(1) .workflow-node { border-color: var(--primary); box-shadow: 0 0 20px rgba(255, 59, 48, 0.4); }
+.workflow-step:nth-child(2) .workflow-node { border-color: var(--secondary); box-shadow: 0 0 20px rgba(255, 149, 0, 0.4); }
+.workflow-step:nth-child(3) .workflow-node { border-color: var(--tertiary); box-shadow: 0 0 20px rgba(52, 199, 89, 0.4); }
+.workflow-step:nth-child(4) .workflow-node { border-color: var(--green); box-shadow: 0 0 20px rgba(52, 199, 89, 0.4); }
+.workflow-step:nth-child(5) .workflow-node { border-color: var(--amber); box-shadow: 0 0 20px rgba(255, 149, 0, 0.4); }
+.workflow-text { flex: 1; }
+.workflow-step-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+.workflow-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; margin: 8px 0; }
+.workflow-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+/* ===== DATA VIZ SECTION ===== */
+#dataviz { padding: 120px 0; background: linear-gradient(180deg, transparent, rgba(52, 199, 89, 0.02), transparent); }
+.viz-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.viz-card { padding: 28px; }
+.viz-card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600; font-size: 16px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.district-bars { display: flex; flex-direction: column; gap: 12px; }
+.district-row { display: flex; align-items: center; gap: 12px; }
+.district-name { font-family: 'JetBrains Mono', monospace; font-size: 11px; width: 100px; color: var(--text-muted); }
+.district-bar-wrap { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
+.district-bar-fill { height: 100%; border-radius: 999px; animation: fill-bar 2s ease-out forwards; }
+.district-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); width: 40px; text-align: right; }
+
+.heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 16px; }
+.heatmap-cell {
+  aspect-ratio: 1; border-radius: 4px;
+  background: rgba(52, 199, 89, 0.05);
+  transition: all 0.3s;
+}
+.heatmap-cell:hover { transform: scale(1.2); z-index: 1; }
+.heatmap-cell.h1 { background: rgba(52, 199, 89, 0.15); }
+.heatmap-cell.h2 { background: rgba(52, 199, 89, 0.4); }
+.heatmap-cell.h3 { background: rgba(255, 149, 0, 0.4); }
+.heatmap-cell.h4 { background: rgba(255, 59, 48, 0.5); }
+.heatmap-cell.h5 { background: rgba(255, 59, 48, 0.85); box-shadow: 0 0 10px rgba(255, 59, 48, 0.6); }
+
+.feed-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.feed-item {
+  padding: 12px 16px; border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border-left: 3px solid;
+  font-size: 13px;
+}
+.feed-item.critical { border-color: var(--red); }
+.feed-item.warning { border-color: var(--amber); }
+.feed-item.info { border-color: var(--tertiary); }
+.feed-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+.feed-text { color: var(--text); font-size: 13px; line-height: 1.5; }
+
+/* ===== NETWORK ANALYSIS ===== */
+#network { padding: 120px 0; }
+.network-canvas-wrap {
+  position: relative; height: 400px;
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.6), rgba(14, 6, 8, 0.4));
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  margin-bottom: 48px;
+  backdrop-filter: blur(15px);
+}
+#networkCanvas { width: 100%; height: 100%; }
+.network-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.legend-item {
+  padding: 20px; border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); text-align: center;
+}
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; margin: 0 auto 8px; }
+.legend-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.legend-count { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; }
+
+/* ===== PREDICTIVE SECTION ===== */
+#predictive { padding: 120px 0; background: linear-gradient(180deg, transparent, rgba(255, 149, 0, 0.03), transparent); }
+.predict-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 48px; }
+.predict-card {
+  padding: 28px; text-align: center; position: relative;
+}
+.risk-gauge {
+  width: 120px; height: 120px; margin: 0 auto 20px;
+  position: relative;
+}
+.risk-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.risk-track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
+.risk-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 2s ease; }
+.risk-label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center;
+}
+.risk-pct { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; }
+.risk-sub { font-size: 10px; color: var(--text-muted); }
+.socio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.socio-card { padding: 24px; }
+.socio-icon { font-size: 32px; margin-bottom: 12px; }
+.socio-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 18px; margin-bottom: 8px; }
+.socio-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+/* ===== SCRB SECTION ===== */
+#scrb { padding: 120px 0; }
+.scrb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.scrb-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+.scrb-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.6), rgba(14, 6, 8, 0.4));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+.scrb-icon { font-size: 28px; flex-shrink: 0; }
+.scrb-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+.scrb-desc { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+/* ===== TECH STACK ===== */
+#tech { padding: 120px 0; background: linear-gradient(180deg, transparent, rgba(255, 59, 48, 0.03), transparent); }
+.tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.tech-card {
+  padding: 28px; text-align: center; cursor: pointer;
+}
+.tech-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+.tech-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+.tech-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* ===== IMPACT SECTION ===== */
+#impact { padding: 120px 0; }
+.impact-header { text-align: center; margin-bottom: 80px; }
+.impact-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 64px; }
+.impact-stat {
+  text-align: center; padding: 40px 24px;
+  background: linear-gradient(135deg, rgba(28, 12, 15, 0.6), rgba(14, 6, 8, 0.4));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.4s;
+  backdrop-filter: blur(10px);
+}
+.impact-stat:hover { transform: translateY(-4px); border-color: var(--border-active); box-shadow: 0 0 25px var(--glow-red); }
+.impact-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px; font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block; margin-bottom: 8px;
+}
+.impact-label { font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ===== CTA SECTION ===== */
+#cta {
+  padding: 120px 0; text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 59, 48, 0.12), transparent 70%);
+}
+.cta-title { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: clamp(36px, 5vw, 64px); letter-spacing: -0.03em; margin-bottom: 24px; }
+.cta-desc { font-size: 18px; color: var(--text-muted); max-width: 560px; margin: 0 auto 48px; line-height: 1.7; }
+.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: rgba(3, 1, 2, 0.95); border-top: 1px solid var(--border);
+  padding: 64px 40px 32px;
+}
+.footer-inner { max-width: 1400px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-brand-title { font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 24px; margin-bottom: 12px; }
+.footer-brand-desc { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
+.footer-col-title { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 14px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--text); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 32px; display: flex; justify-content: space-between; align-items: center; }
+.footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+
+/* ===== ANIMATIONS ===== */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+  .challenge-grid, .solution-content.active, .aiml-grid, .scrb-grid { grid-template-columns: 1fr; }
+  .cap-grid { grid-template-columns: repeat(2, 1fr); }
+  .predict-grid { grid-template-columns: 1fr 1fr; }
+  .tech-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-stats { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  nav { display: none; }
+  .cap-grid, .predict-grid, .socio-grid, .network-legend { grid-template-columns: 1fr; }
+  .viz-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  .workflow-step, .workflow-step:nth-child(even) { flex-direction: column; text-align: center; }
+  .workflow-step:nth-child(even) .workflow-text { text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- 3D WebGL Canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="nav-inner">
+    <a href="#hero" class="logo">
+      <div class="logo-icon">🛡️</div>
+      <div>
+        <div class="logo-text">KAVACH AI</div>
+        <div class="logo-sub">KSP Crime Intelligence Platform</div>
+      </div>
+    </a>
+    <nav>
+      <a href="#challenge">Challenge</a>
+      <a href="#solution">Solution</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#aiml">AI/ML</a>
+      <a href="#dataviz">Analytics</a>
+      <a href="#impact">Impact</a>
+    </nav>
+    <div class="nav-status">
+      <span class="pulse-dot" style="color: var(--green);"></span>
+      SYSTEM OPERATIONAL
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO SECTION ===== -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-label">
+        <span class="badge badge-info"><span class="pulse-dot"></span>KSP DataThon 2025</span>
+        <span class="badge badge-live" style="margin-left: 8px;"><span class="pulse-dot"></span>Live Intelligence</span>
+      </div>
+      <h1 class="hero-title font-hero">
+        Crime<br/>
+        <span class="gradient-text">Intelligence</span><br/>
+        Platform.
+      </h1>
+      <p class="hero-subtitle">
+        A state-of-the-art analytical ecosystem that integrates sociological insights and criminological intelligence with cutting-edge AI — transforming the Karnataka State Police from reactive responders to proactive guardians.
+      </p>
+      <div class="hero-cta">
+        <a href="#solution" class="btn-primary">🚀 Explore Solution</a>
+        <a href="#capabilities" class="btn-ghost">📊 View Capabilities</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="stat-value" data-count="30">0</div>
+          <div class="stat-label">Karnataka Districts Covered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-count="98" data-suffix="%">0</div>
+          <div class="stat-label">AI Prediction Accuracy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-count="4.2" data-suffix="M+">0</div>
+          <div class="stat-label">Crime Patterns Analyzed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" data-count="72" data-suffix="hrs">0</div>
+          <div class="stat-label">Prediction Horizon</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="command-card">
+        <div class="scan-line"></div>
+        <!-- Top status bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+          <span class="label">🖥️ Command Console</span>
+          <span class="badge badge-live"><span class="pulse-dot"></span>LIVE</span>
+        </div>
+        <!-- Rings -->
+        <div class="ring-container" style="height:120px;">
+          <div class="ring"></div>
+          <div class="ring ring2"></div>
+          <div class="ring-center">AI<br/>CORE</div>
+        </div>
+        <!-- Node grid -->
+        <div style="margin: 20px 0 8px;">
+          <span class="label" style="color: var(--text-muted);">District Risk Matrix</span>
+        </div>
+        <div class="node-grid" id="nodeGrid"></div>
+        <!-- Mini stats -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:20px;">
+          <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+            <div class="font-mono" style="font-size:18px; color:var(--tertiary); font-weight:700;">42</div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Hotspots</div>
+          </div>
+          <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+            <div class="font-mono" style="font-size:18px; color:var(--red); font-weight:700;">7</div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Critical</div>
+          </div>
+          <div style="text-align:center; padding:12px; background:rgba(255,255,255,0.03); border-radius:8px;">
+            <div class="font-mono" style="font-size:18px; color:var(--green); font-weight:700;">23</div>
+            <div style="font-size:10px; color:var(--text-muted); margin-top:4px;">Safe Zones</div>
+          </div>
+        </div>
+        <!-- Mini chart -->
+        <div style="margin-top:20px;">
+          <span class="label" style="color:var(--text-muted);">Incident Trend (7 Days)</span>
+          <div class="mini-chart" id="miniChart"></div>
+        </div>
+        <!-- Bottom telemetry -->
+        <div style="margin-top:20px; padding:12px; background:rgba(255,255,255,0.02); border-radius:8px; border:1px solid var(--border);">
+          <div class="font-mono" style="font-size:10px; color:var(--text-dim);">
+            // KERNEL: KAVACH_AI_v4.2 | AUTH: KSP_ADMIN | ENC: AES-512 | STATUS: OPERATIONAL
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHALLENGE SECTION ===== -->
+<section id="challenge" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">⚡ The Problem</span>
+      <h2 class="section-title">Moving Beyond<br/><span class="gradient-text-red">Manual Records</span></h2>
+      <p class="section-desc">
+        The Karnataka State Police (KSP) maintains extensive crime records capturing incidents, offenders, and victims. However, the current analytical ecosystem faces significant hurdles that limit effectiveness.
+      </p>
+    </div>
+    <div class="challenge-grid">
+      <div class="glass challenge-card c1 reveal reveal-delay-1">
+        <div class="challenge-icon">📊</div>
+        <h3 class="challenge-title">Data Silos & Manual Processes</h3>
+        <p class="challenge-desc">Current records are often managed in independent silos, heavily reliant on Excel-based reporting rather than integrated, automated systems. This fragmentation prevents holistic analysis and creates significant blind spots in crime pattern recognition across police station boundaries.</p>
+        <div style="margin-top: 16px; padding: 12px; background: rgba(239,68,68,0.08); border-radius: 8px; border: 1px solid rgba(239,68,68,0.2);">
+          <span class="font-mono" style="font-size: 11px; color: var(--red);">IMPACT: Critical — Data fragmentation across 1,300+ police stations statewide</span>
+        </div>
+      </div>
+      <div class="glass challenge-card c2 reveal reveal-delay-2">
+        <div class="challenge-icon">🤖</div>
+        <h3 class="challenge-title">Lack of Advanced Analytics</h3>
+        <p class="challenge-desc">There is a notable absence of AI-driven approaches, leaving deeper behavioral patterns, social interactions, and interconnected criminal networks undiscovered. Manual analysis cannot process the volume and velocity of crime data needed for effective intelligence gathering.</p>
+        <div style="margin-top: 16px; padding: 12px; background: rgba(245,158,11,0.08); border-radius: 8px; border: 1px solid rgba(245,158,11,0.2);">
+          <span class="font-mono" style="font-size: 11px; color: var(--amber);">IMPACT: High — Hidden criminal networks remain undetected without ML analysis</span>
+        </div>
+      </div>
+      <div class="glass challenge-card c3 reveal reveal-delay-3">
+        <div class="challenge-icon">🗂️</div>
+        <h3 class="challenge-title">Information Gaps at SCRB</h3>
+        <p class="challenge-desc">The State Crime Records Bureau (SCRB) currently receives limited, fragmented information, hindering its ability to perform comprehensive state-wide analysis. Without a unified data pipeline, SCRB cannot generate actionable intelligence reports or coordinate cross-district investigations effectively.</p>
+        <div style="margin-top: 16px; padding: 12px; background: rgba(124,58,237,0.08); border-radius: 8px; border: 1px solid rgba(124,58,237,0.2);">
+          <span class="font-mono" style="font-size: 11px; color: var(--secondary);">IMPACT: High — State-wide crime patterns invisible to central command</span>
+        </div>
+      </div>
+      <div class="glass challenge-card c4 reveal reveal-delay-4">
+        <div class="challenge-icon">⚠️</div>
+        <h3 class="challenge-title">Reactive vs. Proactive Policing</h3>
+        <p class="challenge-desc">Without a systematic exploration of emerging trends, investigators lack the tools for proactive policing strategies and evidence-based prevention. Policing remains largely reactive — responding to crimes after they occur rather than predicting and preventing them through data-driven intelligence.</p>
+        <div style="margin-top: 16px; padding: 12px; background: rgba(6,182,212,0.08); border-radius: 8px; border: 1px solid rgba(6,182,212,0.2);">
+          <span class="font-mono" style="font-size: 11px; color: var(--tertiary);">IMPACT: Critical — Prevention opportunities missed due to reactive approach</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOLUTION SECTION ===== -->
+<section id="solution" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">💡 The Solution</span>
+      <h2 class="section-title">Crime Intelligence &<br/><span class="gradient-text">Analytical Platform</span></h2>
+      <p class="section-desc">
+        KAVACH AI is a comprehensive platform integrating sociological insights and criminological intelligence with cutting-edge technology to create a Strategic Intelligence Hub for Karnataka State Police.
+      </p>
+    </div>
+
+    <div class="solution-tabs">
+      <button class="tab-btn active" onclick="showTab('viz')">🗺️ Visualization</button>
+      <button class="tab-btn" onclick="showTab('network')">🕸️ Network Analysis</button>
+      <button class="tab-btn" onclick="showTab('predictive')">🔮 Predictive AI</button>
+      <button class="tab-btn" onclick="showTab('hotspot')">📍 Hotspot Detection</button>
+    </div>
+
+    <div id="tab-viz" class="solution-content active">
+      <div class="solution-visual glass-glow-cyan glass">
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:20px;">Advanced Visualization Engine</h3>
+        <div class="district-bars">
+          <div class="district-row">
+            <span class="district-name">Bengaluru</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:88%; background:linear-gradient(90deg,#ef4444,#f87171);"></div></div>
+            <span class="district-count">2.4k</span>
+          </div>
+          <div class="district-row">
+            <span class="district-name">Mysuru</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:62%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+            <span class="district-count">1.7k</span>
+          </div>
+          <div class="district-row">
+            <span class="district-name">Hubballi</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:54%; background:linear-gradient(90deg,#1d4ed8,#3b82f6);"></div></div>
+            <span class="district-count">1.4k</span>
+          </div>
+          <div class="district-row">
+            <span class="district-name">Belagavi</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:45%; background:linear-gradient(90deg,#ff9500,#ffcc00);"></div></div>
+            <span class="district-count">1.2k</span>
+          </div>
+          <div class="district-row">
+            <span class="district-name">Mangaluru</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:38%; background:linear-gradient(90deg,#34c759,#66e085);"></div></div>
+            <span class="district-count">980</span>
+          </div>
+          <div class="district-row">
+            <span class="district-name">Kalaburagi</span>
+            <div class="district-bar-wrap"><div class="district-bar-fill" style="width:30%; background:linear-gradient(90deg,#24b34d,#30d158);"></div></div>
+            <span class="district-count">820</span>
+          </div>
+        </div>
+        <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(52,199,89,0.08); border-radius:8px; border:1px solid rgba(52,199,89,0.25);">
+          <span class="font-mono" style="font-size:11px; color:var(--tertiary);">📍 District-Level Drill-Down Active</span>
+          <span class="badge badge-live"><span class="pulse-dot"></span>LIVE DATA</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; margin-bottom:24px;">Dynamic, Spatial & Relational Storytelling</h3>
+        <ul class="feature-list">
+          <li><span class="feature-icon">🗺️</span><div><strong>District-Level Drill-Down:</strong> Interactive maps allow SCRB to visualize crime patterns across all 30 districts and specific police stations with granular geographic precision.</div></li>
+          <li><span class="feature-icon">⏰</span><div><strong>Spatiotemporal Clusters:</strong> Identification of Crime Hotspots by layering time of day with location data, enabling proactive resource deployment before incidents occur.</div></li>
+          <li><span class="feature-icon">🚨</span><div><strong>Emerging Trend Alerts:</strong> Visual indicators with red-zone pulsing animation when a specific crime category spikes in a region compared to historical averages — immediate visual impact.</div></li>
+          <li><span class="feature-icon">📊</span><div><strong>Dynamic Dashboards:</strong> Move beyond static Excel sheets to interactive dashboards that update in real-time with live crime data from all police stations statewide.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="tab-network" class="solution-content">
+      <div class="solution-visual glass-glow-red glass">
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:16px;">Criminal Network Graph</h3>
+        <div style="height:280px; display:flex; align-items:center; justify-content:center; position:relative;">
+          <canvas id="networkViz" width="400" height="280" style="width:100%; height:100%;"></canvas>
+        </div>
+        <div style="display:flex; gap:12px; margin-top:16px;">
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px;height:8px;background:#ff3b30;border-radius:50%;"></div><span class="font-mono" style="font-size:10px; color:var(--text-muted);">SUSPECT</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px;height:8px;background:#ff9500;border-radius:50%;"></div><span class="font-mono" style="font-size:10px; color:var(--text-muted);">VICTIM</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px;height:8px;background:#34c759;border-radius:50%;"></div><span class="font-mono" style="font-size:10px; color:var(--text-muted);">LOCATION</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px;height:8px;background:#ff6b63;border-radius:50%;"></div><span class="font-mono" style="font-size:10px; color:var(--text-muted);">ORGANIZATION</span></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; margin-bottom:24px;">Criminological Network & Link Analysis</h3>
+        <ul class="feature-list">
+          <li><span class="feature-icon">🕸️</span><div><strong>Relationship Mapping:</strong> A node-based visualization showing connections between suspects, victims, and recurring locations — replacing independent data silos with a unified visual graph.</div></li>
+          <li><span class="feature-icon">🔄</span><div><strong>Repeat Offender Tracking:</strong> Visual profiles that link an individual to multiple incidents, highlighting their specific Modus Operandi (MO) across different jurisdictions and time periods.</div></li>
+          <li><span class="feature-icon">🔍</span><div><strong>Association Detection:</strong> Identifying hidden criminal associations and organized crime networks that are completely invisible in isolated Excel sheets — uncovering the unseen connections.</div></li>
+          <li><span class="feature-icon">📈</span><div><strong>Network Evolution Tracking:</strong> Monitor how criminal networks grow, fragment, or merge over time with timeline-based network animation that reveals structural changes.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="tab-predictive" class="solution-content">
+      <div class="solution-visual glass" style="background:rgba(255,149,0,0.08); border-color:rgba(255,149,0,0.3);">
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:20px;">Predictive Risk Scoring</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div style="padding:16px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.3); border-radius:10px; text-align:center;">
+            <div class="font-mono" style="font-size:32px; font-weight:700; color:#ff6b63;">91%</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Bengaluru North</div>
+            <div class="badge badge-danger" style="margin-top:8px;"><span class="pulse-dot"></span>HIGH RISK</div>
+          </div>
+          <div style="padding:16px; background:rgba(255,149,0,0.1); border:1px solid rgba(255,149,0,0.3); border-radius:10px; text-align:center;">
+            <div class="font-mono" style="font-size:32px; font-weight:700; color:#ffb340;">67%</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Belagavi District</div>
+            <div class="badge badge-warn" style="margin-top:8px;"><span class="pulse-dot"></span>MODERATE</div>
+          </div>
+          <div style="padding:16px; background:rgba(52,199,89,0.1); border:1px solid rgba(52,199,89,0.3); border-radius:10px; text-align:center;">
+            <div class="font-mono" style="font-size:32px; font-weight:700; color:#30d158;">28%</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Kodagu District</div>
+            <div class="badge badge-live" style="margin-top:8px;"><span class="pulse-dot"></span>LOW RISK</div>
+          </div>
+          <div style="padding:16px; background:rgba(255,59,48,0.1); border:1px solid rgba(255,59,48,0.3); border-radius:10px; text-align:center;">
+            <div class="font-mono" style="font-size:32px; font-weight:700; color:#ff6b63;">83%</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Mysuru Urban</div>
+            <div class="badge badge-danger" style="margin-top:8px;"><span class="pulse-dot"></span>HIGH RISK</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding:12px; background:rgba(255,149,0,0.08); border-radius:8px; border:1px solid rgba(255,149,0,0.2);">
+          <div class="font-mono" style="font-size:11px; color:var(--secondary);">🔮 AI MODEL: GNN-CRIME-v3 | Confidence: 96.8% | Horizon: 72hr</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; margin-bottom:24px;">Sociological & AI-Driven Intelligence</h3>
+        <ul class="feature-list">
+          <li><span class="feature-icon">📈</span><div><strong>Socio-Economic Correlation:</strong> Overlays crime data with urbanization patterns, population distribution, and socio-economic indicators to understand the "why" behind the "where" of crime.</div></li>
+          <li><span class="feature-icon">🎯</span><div><strong>Predictive Risk Scoring:</strong> AI-driven charts that forecast potential "High-Risk" areas or emerging crime typologies based on hidden correlations invisible to human analysts.</div></li>
+          <li><span class="feature-icon">🔔</span><div><strong>Anomaly Detection:</strong> Visual call-outs for incidents that deviate from standard behavioral patterns, assisting investigators in linking complex cases across time and geography.</div></li>
+          <li><span class="feature-icon">🧠</span><div><strong>Strategic Intelligence Hub:</strong> Moves SCRB from reactive reporting to proactive strategy — enabling evidence-based resource allocation and targeted intervention programs.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="tab-hotspot" class="solution-content">
+      <div class="solution-visual glass-glow-red glass">
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:16px;">Spatiotemporal Hotspot Matrix</h3>
+        <div style="margin-bottom:12px; display:flex; gap:12px; align-items:center;">
+          <span class="font-mono" style="font-size:10px; color:var(--text-muted);">DAY/HOUR →</span>
+        </div>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+        <div style="display:flex; gap:8px; margin-top:16px; align-items:center;">
+          <span class="font-mono" style="font-size:10px; color:var(--text-muted);">LOW</span>
+          <div style="display:flex; gap:3px;">
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(52,199,89,0.2);"></div>
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(52,199,89,0.5);"></div>
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(255,149,0,0.5);"></div>
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(255,59,48,0.5);"></div>
+            <div style="width:16px;height:16px;border-radius:3px;background:rgba(255,59,48,0.9);"></div>
+          </div>
+          <span class="font-mono" style="font-size:10px; color:var(--text-muted);">HIGH</span>
+        </div>
+        <div style="margin-top:16px; padding:12px; background:rgba(255,59,48,0.08); border-radius:8px; border:1px solid rgba(255,59,48,0.2);">
+          <div class="font-mono" style="font-size:11px; color:var(--red);">🔥 Peak Risk: Fri-Sat 22:00–03:00 | Deploy additional units</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; margin-bottom:24px;">Pattern & Trend Discovery</h3>
+        <ul class="feature-list">
+          <li><span class="feature-icon">🔥</span><div><strong>Crime Hotspot Identification:</strong> Statistical analytics identify spatial and temporal hotspots with precision, allowing smarter deployment of police resources exactly where and when they're needed most.</div></li>
+          <li><span class="feature-icon">⌚</span><div><strong>Time-of-Day Analysis:</strong> Layering crime incidents with temporal data reveals distinct patterns — nighttime burglaries, daytime vehicle thefts, weekend violence clusters — enabling shift-based deployment optimization.</div></li>
+          <li><span class="feature-icon">📉</span><div><strong>Seasonal Trend Forecasting:</strong> Identify recurring annual patterns tied to festivals, elections, or economic cycles to enable pre-emptive resource allocation during vulnerable periods.</div></li>
+          <li><span class="feature-icon">🗓️</span><div><strong>MO Pattern Recognition:</strong> Detect recurring modus operandi across jurisdictions to link serial crimes and identify prolific offenders operating across multiple districts.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CAPABILITIES SECTION ===== -->
+<section id="capabilities" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">⚙️ Core Capabilities</span>
+      <h2 class="section-title">Six Pillars of<br/><span class="gradient-text">Intelligence</span></h2>
+      <p class="section-desc">A comprehensive suite of analytical capabilities designed to address every dimension of modern crime intelligence — from data collection to predictive prevention.</p>
+    </div>
+    <div class="cap-grid">
+      <div class="glass cap-card reveal reveal-delay-1">
+        <div class="cap-number">01</div>
+        <span class="cap-icon">🗺️</span>
+        <h3 class="cap-title">Advanced Geospatial Visualization</h3>
+        <p class="cap-desc">Replace static spreadsheets with interactive dashboards and geospatial maps that track crime clusters across all 30 Karnataka districts in real-time with dynamic spatial storytelling.</p>
+        <ul class="cap-features">
+          <li>Interactive district-level drill-down maps</li>
+          <li>Real-time crime cluster visualization</li>
+          <li>Spatiotemporal heatmap overlays</li>
+          <li>Red-zone pulsing alert indicators</li>
+          <li>Cross-district pattern comparison</li>
+        </ul>
+      </div>
+      <div class="glass cap-card reveal reveal-delay-2">
+        <div class="cap-number">02</div>
+        <span class="cap-icon">🕸️</span>
+        <h3 class="cap-title">Criminal Network & Link Analysis</h3>
+        <p class="cap-desc">Visual node-based mapping of relationships between suspects, victims, and locations — replacing independent data silos with a unified intelligence graph revealing hidden organized crime structures.</p>
+        <ul class="cap-features">
+          <li>Node-based suspect relationship maps</li>
+          <li>Repeat offender MO tracking</li>
+          <li>Hidden association detection</li>
+          <li>Cross-jurisdictional link analysis</li>
+          <li>Gang structure visualization</li>
+        </ul>
+      </div>
+      <div class="glass cap-card reveal reveal-delay-3">
+        <div class="cap-number">03</div>
+        <span class="cap-icon">🔮</span>
+        <h3 class="cap-title">AI-Driven Predictive Intelligence</h3>
+        <p class="cap-desc">Machine learning models that forecast crime risk areas with 96.8% temporal accuracy — providing a 72-hour prediction horizon to enable genuinely proactive policing strategies.</p>
+        <ul class="cap-features">
+          <li>Predictive risk scoring by district</li>
+          <li>Emerging crime typology detection</li>
+          <li>Socio-economic correlation analysis</li>
+          <li>72-hour crime horizon forecasting</li>
+          <li>Anomaly detection alerts</li>
+        </ul>
+      </div>
+      <div class="glass cap-card reveal reveal-delay-1">
+        <div class="cap-number">04</div>
+        <span class="cap-icon">📊</span>
+        <h3 class="cap-title">Pattern & Trend Discovery</h3>
+        <p class="cap-desc">Statistical analytics that identify spatial and temporal hotspots across Karnataka — allowing smarter, evidence-based resource deployment instead of intuition-based policing.</p>
+        <ul class="cap-features">
+          <li>Time-of-day crime clustering</li>
+          <li>Seasonal pattern forecasting</li>
+          <li>Crime type trend analysis</li>
+          <li>Multi-year comparative statistics</li>
+          <li>Emerging threat early warning</li>
+        </ul>
+      </div>
+      <div class="glass cap-card reveal reveal-delay-2">
+        <div class="cap-number">05</div>
+        <span class="cap-icon">🧬</span>
+        <h3 class="cap-title">Behavioral & MO Analysis</h3>
+        <p class="cap-desc">Detect connections between suspects and organized crime networks while identifying recurring Modus Operandi patterns across cases — linking serial crimes that appear unrelated in isolation.</p>
+        <ul class="cap-features">
+          <li>Modus operandi fingerprinting</li>
+          <li>Behavioral pattern clustering</li>
+          <li>Serial crime linking algorithm</li>
+          <li>Organized crime network detection</li>
+          <li>Offender profiling intelligence</li>
+        </ul>
+      </div>
+      <div class="glass cap-card reveal reveal-delay-3">
+        <div class="cap-number">06</div>
+        <span class="cap-icon">⚡</span>
+        <h3 class="cap-title">Integrated SCRB Data Pipeline</h3>
+        <p class="cap-desc">A unified, automated data pipeline connecting all district police stations to the State Crime Records Bureau — eliminating information gaps and enabling comprehensive state-wide intelligence analysis.</p>
+        <ul class="cap-features">
+          <li>Automated data ingestion from all stations</li>
+          <li>Real-time SCRB reporting dashboard</li>
+          <li>Cross-district data harmonization</li>
+          <li>Encrypted intelligence dossier export</li>
+          <li>State-wide crime analytics portal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AI/ML SECTION ===== -->
+<section id="aiml" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🤖 AI / Machine Learning</span>
+      <h2 class="section-title">ML-Driven<br/><span class="gradient-text">Crime Intelligence</span></h2>
+      <p class="section-desc">Cutting-edge machine learning models trained on historical Karnataka crime data to identify hidden correlations, detect anomalies, and predict emerging crime risks with unprecedented accuracy.</p>
+    </div>
+    <div class="aiml-grid">
+      <div>
+        <div class="aiml-models">
+          <div class="model-card">
+            <div class="model-icon">🧠</div>
+            <div>
+              <div class="model-name">Graph Neural Network (GNN)</div>
+              <div class="model-desc">Criminal network topology analysis</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:97%;"></div></div>
+            </div>
+            <div class="model-acc">97.2%</div>
+          </div>
+          <div class="model-card">
+            <div class="model-icon">📍</div>
+            <div>
+              <div class="model-name">Spatiotemporal LSTM</div>
+              <div class="model-desc">Crime location & time prediction</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:94%;"></div></div>
+            </div>
+            <div class="model-acc">94.6%</div>
+          </div>
+          <div class="model-card">
+            <div class="model-icon">🎭</div>
+            <div>
+              <div class="model-name">Isolation Forest</div>
+              <div class="model-desc">Anomaly & outlier detection</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:91%;"></div></div>
+            </div>
+            <div class="model-acc">91.8%</div>
+          </div>
+          <div class="model-card">
+            <div class="model-icon">🔗</div>
+            <div>
+              <div class="model-name">DBSCAN Clustering</div>
+              <div class="model-desc">Geographic crime cluster detection</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:96%;"></div></div>
+            </div>
+            <div class="model-acc">96.1%</div>
+          </div>
+          <div class="model-card">
+            <div class="model-icon">📊</div>
+            <div>
+              <div class="model-name">XGBoost Classifier</div>
+              <div class="model-desc">Recidivism & risk prediction</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:89%;"></div></div>
+            </div>
+            <div class="model-acc">89.4%</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:28px; margin-bottom:24px; letter-spacing:-0.02em;">From Data to<br/><span class="gradient-text">Actionable Intelligence</span></h3>
+        <p style="color:var(--text-muted); line-height:1.8; margin-bottom:32px; font-size:16px;">
+          KAVACH AI deploys a multi-model ensemble approach where each ML algorithm specializes in a different dimension of crime intelligence. Together, they create a comprehensive analytical framework that's far more powerful than any single model.
+        </p>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="glass" style="padding:20px; border-color:rgba(6,182,212,0.2);">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+              <span style="font-size:20px;">🔍</span>
+              <strong style="font-family:'Space Grotesk',sans-serif;">Hidden Correlation Discovery</strong>
+            </div>
+            <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Identify non-obvious relationships between socio-economic factors, weather patterns, event calendars, and crime rates — correlations invisible to human analysis.</p>
+          </div>
+          <div class="glass" style="padding:20px; border-color:rgba(124,58,237,0.2);">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+              <span style="font-size:20px;">⚡</span>
+              <strong style="font-family:'Space Grotesk',sans-serif;">Real-Time Anomaly Detection</strong>
+            </div>
+            <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">Continuously monitor incoming crime reports and flag deviations from established patterns — enabling investigators to prioritize unusual cases that may indicate emerging threats.</p>
+          </div>
+          <div class="glass" style="padding:20px; border-color:rgba(16,185,129,0.2);">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+              <span style="font-size:20px;">🎯</span>
+              <strong style="font-family:'Space Grotesk',sans-serif;">Predictive Resource Allocation</strong>
+            </div>
+            <p style="font-size:14px; color:var(--text-muted); line-height:1.6;">AI-powered recommendations for optimal deployment of police units, patrol routes, and investigation resources based on predicted crime probability maps.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== WORKFLOW SECTION ===== -->
+<section id="workflow" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🔄 Operational Workflow</span>
+      <h2 class="section-title">The Intelligence<br/><span class="gradient-text">Lifecycle</span></h2>
+      <p class="section-desc">From raw data ingestion to actionable ground intelligence — a seamless five-stage pipeline that transforms fragmented police records into strategic crime prevention intelligence.</p>
+    </div>
+    <div class="workflow-timeline">
+      <div class="workflow-line"></div>
+      <div class="workflow-step reveal">
+        <div class="workflow-text">
+          <div class="workflow-step-num">Stage 01</div>
+          <h4 class="workflow-title">Data Ingestion & Integration</h4>
+          <p class="workflow-desc">Raw crime data from 1,300+ police stations across all 30 Karnataka districts is funneled into the central KAVACH AI core through automated ETL pipelines, replacing manual Excel uploads with real-time synchronized data streams.</p>
+        </div>
+        <div class="workflow-node">📥</div>
+        <div style="flex:1;"></div>
+      </div>
+      <div class="workflow-step reveal reveal-delay-1">
+        <div style="flex:1;"></div>
+        <div class="workflow-node">🤖</div>
+        <div class="workflow-text">
+          <div class="workflow-step-num">Stage 02</div>
+          <h4 class="workflow-title">AI/ML Analysis & Pattern Recognition</h4>
+          <p class="workflow-desc">Multi-model ensemble AI correlates incoming signals against 4.2 million historical crime patterns. GNN identifies criminal networks, LSTM models predict spatiotemporal risk, and Isolation Forest detects anomalous incidents for priority investigation.</p>
+        </div>
+      </div>
+      <div class="workflow-step reveal reveal-delay-2">
+        <div class="workflow-text">
+          <div class="workflow-step-num">Stage 03</div>
+          <h4 class="workflow-title">Intelligence Visualization</h4>
+          <p class="workflow-desc">Analytical results are transformed into interactive dashboards, geospatial heatmaps, and network graphs that SCRB officers and district commanders can explore through intuitive visual interfaces — making complex data immediately actionable.</p>
+        </div>
+        <div class="workflow-node">📊</div>
+        <div style="flex:1;"></div>
+      </div>
+      <div class="workflow-step reveal reveal-delay-3">
+        <div style="flex:1;"></div>
+        <div class="workflow-node">🚨</div>
+        <div class="workflow-text">
+          <div class="workflow-step-num">Stage 04</div>
+          <h4 class="workflow-title">Alert Generation & Dispatch</h4>
+          <p class="workflow-desc">Automated priority alerts are dispatched to ground units when AI detects emerging hotspots, anomalous crime clusters, or high-risk patterns. Officers receive geo-targeted intelligence briefs with recommended response protocols.</p>
+        </div>
+      </div>
+      <div class="workflow-step reveal reveal-delay-4">
+        <div class="workflow-text">
+          <div class="workflow-step-num">Stage 05</div>
+          <h4 class="workflow-title">Feedback & Model Improvement</h4>
+          <p class="workflow-desc">Field outcomes from police interventions are fed back into the AI models through a closed-loop learning system, continuously improving prediction accuracy and ensuring the platform adapts to evolving crime patterns across Karnataka.</p>
+        </div>
+        <div class="workflow-node">🔁</div>
+        <div style="flex:1;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DATA VISUALIZATION SECTION ===== -->
+<section id="dataviz" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">📡 Live Intelligence Feed</span>
+      <h2 class="section-title">Real-Time<br/><span class="gradient-text">Crime Analytics</span></h2>
+      <p class="section-desc">A live window into Karnataka's crime intelligence ecosystem — from district-level incident tracking to emerging threat alerts across the state.</p>
+    </div>
+    <div class="viz-grid">
+      <div>
+        <div class="glass viz-card reveal" style="margin-bottom:24px;">
+          <div class="viz-card-title">
+            📊 District Crime Index — Statewide Overview
+            <span class="badge badge-live" style="margin-left:auto;"><span class="pulse-dot"></span>LIVE</span>
+          </div>
+          <div class="district-bars">
+            <div class="district-row">
+              <span class="district-name">Bengaluru Urban</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:88%; background:linear-gradient(90deg,#ef4444,#f87171);"></div></div>
+              <span class="district-count" style="color:#f87171;">HIGH</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Mysuru</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:62%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+              <span class="district-count" style="color:#fbbf24;">MED</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Kalaburagi</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:70%; background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+              <span class="district-count" style="color:#fbbf24;">MED</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Belagavi</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:55%; background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div>
+              <span class="district-count" style="color:#a78bfa;">MED</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Hubballi-Dharwad</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:48%; background:linear-gradient(90deg,#1d4ed8,#3b82f6);"></div></div>
+              <span class="district-count" style="color:#60a5fa;">LOW</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Mangaluru</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:40%; background:linear-gradient(90deg,#06b6d4,#22d3ee);"></div></div>
+              <span class="district-count" style="color:#22d3ee;">LOW</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Shivamogga</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:35%; background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+              <span class="district-count" style="color:#34d399;">SAFE</span>
+            </div>
+            <div class="district-row">
+              <span class="district-name">Tumakuru</span>
+              <div class="district-bar-wrap"><div class="district-bar-fill" style="width:30%; background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+              <span class="district-count" style="color:#34d399;">SAFE</span>
+            </div>
+          </div>
+        </div>
+        <div class="glass viz-card reveal reveal-delay-2">
+          <div class="viz-card-title">🔥 Spatiotemporal Hotspot Matrix (Weekly)</div>
+          <div style="display:flex; gap:4px; margin-bottom:8px; overflow-x:auto;">
+            <div style="width:80px; flex-shrink:0;"></div>
+            <div class="font-mono" style="flex:1; font-size:9px; color:var(--text-dim); display:flex; justify-content:space-around;">
+              <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+            </div>
+          </div>
+          <div class="heatmap-grid" id="mainHeatmap" style="grid-template-columns: 80px repeat(7, 1fr);"></div>
+        </div>
+      </div>
+      <div>
+        <div class="glass viz-card reveal reveal-delay-1" style="margin-bottom:24px;">
+          <div class="viz-card-title">🚨 Live Incident Feed</div>
+          <div class="feed-list">
+            <div class="feed-item critical">
+              <div class="feed-meta">🔴 BENGALURU SOUTH &nbsp;•&nbsp; 02:14:10 &nbsp;•&nbsp; PRIORITY ALPHA</div>
+              <div class="feed-text">Unusual clustering detected — Sector 4-B social unrest probability 78%. Requesting unit deployment.</div>
+            </div>
+            <div class="feed-item warning">
+              <div class="feed-meta">🟡 BELAGAVI &nbsp;•&nbsp; 02:08:12 &nbsp;•&nbsp; MODERATE</div>
+              <div class="feed-text">Cross-border anomaly detected. Vehicle ID mismatch at checkpoint B-12. Verification initiated.</div>
+            </div>
+            <div class="feed-item info">
+              <div class="feed-meta">🔵 MYSURU &nbsp;•&nbsp; 02:12:45 &nbsp;•&nbsp; INFO</div>
+              <div class="feed-text">Patrol unit repositioned to Chamundi Hill corridor based on predictive risk model output.</div>
+            </div>
+            <div class="feed-item critical">
+              <div class="feed-meta">🔴 HUBBALLI &nbsp;•&nbsp; 01:55:30 &nbsp;•&nbsp; CRITICAL</div>
+              <div class="feed-text">Thermal signature match for Target_ID: 9921. Known repeat offender — MO matches 6 prior incidents.</div>
+            </div>
+            <div class="feed-item warning">
+              <div class="feed-meta">🟡 KALABURAGI &nbsp;•&nbsp; 01:42:18 &nbsp;•&nbsp; MODERATE</div>
+              <div class="feed-text">Socio-economic stress indicator spike detected. Historically correlated with petty crime surge.</div>
+            </div>
+            <div class="feed-item info">
+              <div class="feed-meta">🔵 TUMAKURU &nbsp;•&nbsp; 01:30:05 &nbsp;•&nbsp; INFO</div>
+              <div class="feed-text">District cleared — 14-day incident-free streak. Patrol frequency reduction approved by AI model.</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass viz-card reveal reveal-delay-3">
+          <div class="viz-card-title">📡 SCRB System Status</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span class="font-mono" style="font-size:11px;">Data Pipeline</span>
+              <span class="badge badge-live"><span class="pulse-dot"></span>OPERATIONAL</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span class="font-mono" style="font-size:11px;">AI Models Online</span>
+              <span class="badge badge-live"><span class="pulse-dot"></span>5/5 ACTIVE</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span class="font-mono" style="font-size:11px;">Districts Connected</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--tertiary);">30/30</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
+              <span class="font-mono" style="font-size:11px;">Stations Reporting</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--tertiary);">1,247/1,300</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0;">
+              <span class="font-mono" style="font-size:11px;">System Uptime</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--green);">99.97%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NETWORK ANALYSIS SECTION ===== -->
+<section id="network" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🕸️ Criminal Network Analysis</span>
+      <h2 class="section-title">Mapping the<br/><span class="gradient-text">Invisible Connections</span></h2>
+      <p class="section-desc">Graph-based intelligence that visually connects fragmented data points to reveal organized crime structures, criminal associations, and repeat offender networks operating across Karnataka.</p>
+    </div>
+    <div class="network-canvas-wrap reveal">
+      <canvas id="networkCanvas"></canvas>
+      <div style="position:absolute; top:16px; left:16px;">
+        <span class="badge badge-info"><span class="pulse-dot"></span>Live Network Analysis</span>
+      </div>
+      <div style="position:absolute; top:16px; right:16px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim);">
+        Nodes: 47 &nbsp;|&nbsp; Connections: 89 &nbsp;|&nbsp; Clusters: 6
+      </div>
+    </div>
+    <div class="network-legend">
+      <div class="legend-item glass">
+        <div class="legend-dot" style="background:var(--red); box-shadow:0 0 8px var(--red);"></div>
+        <div class="legend-label">Suspects</div>
+        <div class="legend-count gradient-text-red">142</div>
+      </div>
+      <div class="legend-item glass">
+        <div class="legend-dot" style="background:var(--amber); box-shadow:0 0 8px var(--amber);"></div>
+        <div class="legend-label">Victims</div>
+        <div class="legend-count" style="color:var(--amber);">387</div>
+      </div>
+      <div class="legend-item glass">
+        <div class="legend-dot" style="background:var(--tertiary); box-shadow:0 0 8px var(--tertiary);"></div>
+        <div class="legend-label">Locations</div>
+        <div class="legend-count" style="color:var(--tertiary);">234</div>
+      </div>
+      <div class="legend-item glass">
+        <div class="legend-dot" style="background:var(--secondary); box-shadow:0 0 8px var(--secondary);"></div>
+        <div class="legend-label">Org. Networks</div>
+        <div class="legend-count" style="color:var(--secondary);">18</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PREDICTIVE ANALYTICS SECTION ===== -->
+<section id="predictive" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🔮 Predictive Intelligence</span>
+      <h2 class="section-title">From Reactive to<br/><span class="gradient-text">Proactive Policing</span></h2>
+      <p class="section-desc">AI-driven risk scoring and socio-economic correlation analysis that transforms SCRB from a reporting bureau into a Strategic Intelligence Hub capable of preventing crime before it occurs.</p>
+    </div>
+    <div class="predict-grid">
+      <div class="glass predict-card reveal reveal-delay-1">
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:20px;">Bengaluru North</h4>
+        <div class="risk-gauge">
+          <svg class="risk-svg" viewBox="0 0 120 120">
+            <circle class="risk-track" cx="60" cy="60" r="50" />
+            <circle class="risk-fill" cx="60" cy="60" r="50"
+              stroke="#ef4444"
+              stroke-dasharray="314"
+              stroke-dashoffset="57"
+              style="filter:drop-shadow(0 0 6px #ef4444);"
+            />
+          </svg>
+          <div class="risk-label">
+            <div class="risk-pct" style="color:#ef4444;">82%</div>
+            <div class="risk-sub">RISK SCORE</div>
+          </div>
+        </div>
+        <span class="badge badge-danger"><span class="pulse-dot"></span>HIGH RISK ZONE</span>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:12px; line-height:1.6;">Elevated unemployment + dense population + historical pattern convergence</p>
+      </div>
+      <div class="glass predict-card reveal reveal-delay-2">
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:20px;">Mysuru Urban</h4>
+        <div class="risk-gauge">
+          <svg class="risk-svg" viewBox="0 0 120 120">
+            <circle class="risk-track" cx="60" cy="60" r="50" />
+            <circle class="risk-fill" cx="60" cy="60" r="50"
+              stroke="#f59e0b"
+              stroke-dasharray="314"
+              stroke-dashoffset="126"
+              style="filter:drop-shadow(0 0 6px #f59e0b);"
+            />
+          </svg>
+          <div class="risk-label">
+            <div class="risk-pct" style="color:#f59e0b;">60%</div>
+            <div class="risk-sub">RISK SCORE</div>
+          </div>
+        </div>
+        <span class="badge badge-warn"><span class="pulse-dot"></span>MODERATE RISK</span>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:12px; line-height:1.6;">Seasonal festival pattern + tourism influx correlation detected by AI model</p>
+      </div>
+      <div class="glass predict-card reveal reveal-delay-3">
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-bottom:20px;">Kodagu District</h4>
+        <div class="risk-gauge">
+          <svg class="risk-svg" viewBox="0 0 120 120">
+            <circle class="risk-track" cx="60" cy="60" r="50" />
+            <circle class="risk-fill" cx="60" cy="60" r="50"
+              stroke="#10b981"
+              stroke-dasharray="314"
+              stroke-dashoffset="251"
+              style="filter:drop-shadow(0 0 6px #10b981);"
+            />
+          </svg>
+          <div class="risk-label">
+            <div class="risk-pct" style="color:#10b981;">20%</div>
+            <div class="risk-sub">RISK SCORE</div>
+          </div>
+        </div>
+        <span class="badge badge-live"><span class="pulse-dot"></span>LOW RISK ZONE</span>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:12px; line-height:1.6;">Stable socio-economic indicators + effective community policing programs</p>
+      </div>
+    </div>
+    <div class="socio-grid reveal">
+      <div class="glass socio-card">
+        <div class="socio-icon">🏘️</div>
+        <h4 class="socio-title">Socio-Economic Correlation</h4>
+        <p class="socio-desc">KAVACH AI overlays crime data with urbanization patterns, population distribution, and socio-economic indicators — revealing the structural "why" behind crime patterns. This enables targeted social intervention programs alongside law enforcement action.</p>
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Unemployment Correlation</span>
+            <span class="font-mono" style="font-size:11px; color:var(--tertiary);">+0.78 r</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Population Density</span>
+            <span class="font-mono" style="font-size:11px; color:var(--tertiary);">+0.65 r</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Literacy Rate (inverse)</span>
+            <span class="font-mono" style="font-size:11px; color:var(--tertiary);">-0.54 r</span>
+          </div>
+        </div>
+      </div>
+      <div class="glass socio-card">
+        <div class="socio-icon">🧠</div>
+        <h4 class="socio-title">Anomaly Detection Engine</h4>
+        <p class="socio-desc">The Isolation Forest model continuously monitors incoming data streams, flagging incidents that deviate significantly from established behavioral patterns. Visual call-outs highlight these anomalies for immediate investigator attention — uncovering complex multi-case linkages.</p>
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Anomalies Detected (30d)</span>
+            <span class="font-mono" style="font-size:11px; color:var(--red);">47 flagged</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Cases Linked via AI</span>
+            <span class="font-mono" style="font-size:11px; color:var(--green);">31 connected</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="font-mono" style="font-size:11px; color:var(--text-muted);">Investigations Opened</span>
+            <span class="font-mono" style="font-size:11px; color:var(--amber);">12 initiated</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCRB INTEGRATION SECTION ===== -->
+<section id="scrb" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🏛️ SCRB Integration</span>
+      <h2 class="section-title">Empowering the<br/><span class="gradient-text">State Crime Records Bureau</span></h2>
+      <p class="section-desc">A dedicated integration layer that transforms SCRB from a passive record-keeping body into an active strategic intelligence command center with state-wide situational awareness.</p>
+    </div>
+    <div class="scrb-grid">
+      <div>
+        <ul class="scrb-list">
+          <li class="scrb-item glass reveal reveal-delay-1">
+            <div class="scrb-icon">📡</div>
+            <div>
+              <div class="scrb-title">Automated Data Pipeline</div>
+              <div class="scrb-desc">Eliminate manual Excel uploads with automated, real-time data flows from all 1,300+ police stations directly into the SCRB central database — ensuring complete, timely information.</div>
+            </div>
+          </li>
+          <li class="scrb-item glass reveal reveal-delay-2">
+            <div class="scrb-icon">🗺️</div>
+            <div>
+              <div class="scrb-title">State-Wide Crime Dashboard</div>
+              <div class="scrb-desc">A unified command dashboard giving SCRB officers a comprehensive, real-time view of crime patterns across all 30 districts — from high-level statewide trends to station-level incident data.</div>
+            </div>
+          </li>
+          <li class="scrb-item glass reveal reveal-delay-3">
+            <div class="scrb-icon">📋</div>
+            <div>
+              <div class="scrb-title">Automated Intelligence Reports</div>
+              <div class="scrb-desc">AI-generated weekly and monthly intelligence reports that summarize emerging trends, risk forecasts, network discoveries, and anomalies — ready for senior police leadership briefings.</div>
+            </div>
+          </li>
+          <li class="scrb-item glass reveal reveal-delay-4">
+            <div class="scrb-icon">🔗</div>
+            <div>
+              <div class="scrb-title">Cross-District Case Linking</div>
+              <div class="scrb-desc">Automated identification and flagging of connected cases across district boundaries — enabling SCRB to coordinate multi-district investigations that were previously invisible in siloed systems.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <div class="glass" style="padding:32px; background:linear-gradient(135deg, rgba(29,78,216,0.1), rgba(124,58,237,0.08)); border-color:rgba(29,78,216,0.3);">
+          <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:24px; margin-bottom:24px;">SCRB Data Completeness</h3>
+          <div style="display:flex; flex-direction:column; gap:20px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-size:14px; color:var(--text-muted);">Data Coverage (Before KAVACH)</span>
+                <span class="font-mono" style="font-size:14px; color:var(--red);">34%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:34%; background:var(--red);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <span style="font-size:14px; color:var(--text-muted);">Data Coverage (After KAVACH)</span>
+                <span class="font-mono" style="font-size:14px; color:var(--green);">96%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:96%;"></div></div>
+            </div>
+            <div style="padding:20px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:10px; margin-top:8px;">
+              <div class="font-mono" style="font-size:12px; color:var(--green); text-align:center;">
+                +62% improvement in statewide crime data coverage
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:32px;">
+            <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:600; margin-bottom:16px;">Reporting Transformation</h4>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="padding:16px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; text-align:center;">
+                <div class="font-mono" style="font-size:10px; color:var(--red); margin-bottom:8px;">BEFORE</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:var(--red);">7 days</div>
+                <div style="font-size:12px; color:var(--text-muted);">Report lag time</div>
+              </div>
+              <div style="padding:16px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:8px; text-align:center;">
+                <div class="font-mono" style="font-size:10px; color:var(--green); margin-bottom:8px;">AFTER</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:var(--green);">Real-time</div>
+                <div style="font-size:12px; color:var(--text-muted);">Live data stream</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TECH STACK ===== -->
+<section id="tech" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="label">🛠️ Technology Stack</span>
+      <h2 class="section-title">Built With<br/><span class="gradient-text">Cutting-Edge Technology</span></h2>
+      <p class="section-desc">A modern, scalable technology stack designed for mission-critical law enforcement intelligence — secure, performant, and built for real-time data processing at state scale.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="glass tech-card reveal reveal-delay-1">
+        <span class="tech-icon">⚡</span>
+        <div class="tech-name">Apache Kafka</div>
+        <div class="tech-desc">Real-time data streaming pipeline ingesting live crime reports from 1,300+ police stations with sub-second latency.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-2">
+        <span class="tech-icon">🧠</span>
+        <div class="tech-name">PyTorch / TensorFlow</div>
+        <div class="tech-desc">Deep learning frameworks powering our GNN, LSTM, and ensemble ML models for crime prediction and pattern recognition.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-3">
+        <span class="tech-icon">📊</span>
+        <div class="tech-name">Apache Spark</div>
+        <div class="tech-desc">Distributed data processing for large-scale crime analytics across multi-year historical datasets spanning all Karnataka districts.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-4">
+        <span class="tech-icon">🗺️</span>
+        <div class="tech-name">Deck.GL + MapboxGL</div>
+        <div class="tech-desc">GPU-accelerated geospatial visualization for rendering dynamic crime heatmaps and district-level drill-down maps.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-1">
+        <span class="tech-icon">🕸️</span>
+        <div class="tech-name">Neo4j Graph DB</div>
+        <div class="tech-desc">Native graph database storing criminal networks — enabling lightning-fast relationship traversal for link analysis.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-2">
+        <span class="tech-icon">🔒</span>
+        <div class="tech-name">AES-512 Encryption</div>
+        <div class="tech-desc">Military-grade encryption for all data at rest and in transit, ensuring sensitive crime intelligence is fully protected.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-3">
+        <span class="tech-icon">☁️</span>
+        <div class="tech-name">Kubernetes + Docker</div>
+        <div class="tech-desc">Container orchestration ensuring 99.97% uptime for the mission-critical KAVACH AI platform with auto-scaling capabilities.</div>
+      </div>
+      <div class="glass tech-card reveal reveal-delay-4">
+        <span class="tech-icon">📱</span>
+        <div class="tech-name">React + D3.js</div>
+        <div class="tech-desc">Responsive web dashboard with D3.js-powered interactive charts, graphs, and real-time data visualizations for field officers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPACT SECTION ===== -->
+<section id="impact" class="section">
+  <div class="container">
+    <div class="impact-header reveal">
+      <span class="label">📈 Expected Impact</span>
+      <h2 class="section-title">Measurable<br/><span class="gradient-text">Outcomes</span></h2>
+      <p class="section-desc">KAVACH AI is projected to deliver transformative improvements across every dimension of Karnataka State Police intelligence operations and crime prevention effectiveness.</p>
+    </div>
+    <div class="impact-stats">
+      <div class="impact-stat reveal reveal-delay-1">
+        <span class="impact-number" data-count="62">0</span>
+        <div class="impact-label">% increase in SCRB data coverage</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-2">
+        <span class="impact-number" data-count="40">0</span>
+        <div class="impact-label">% reduction in crime response time</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-3">
+        <span class="impact-number" data-count="96" data-suffix="%">0</span>
+        <div class="impact-label">ML model prediction accuracy</div>
+      </div>
+      <div class="impact-stat reveal reveal-delay-4">
+        <span class="impact-number" data-count="1300" data-suffix="+">0</span>
+        <div class="impact-label">police stations integrated</div>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;" class="reveal">
+      <div class="glass" style="padding:32px; text-align:center; border-color:rgba(29,78,216,0.3);">
+        <div style="font-size:40px; margin-bottom:16px;">🔮</div>
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-bottom:12px;">Predictive Prevention</h4>
+        <p style="font-size:14px; color:var(--text-muted); line-height:1.7;">AI forecasts enable pre-emptive deployment of police resources to high-risk zones before crimes occur — shifting from reactive to truly proactive law enforcement.</p>
+      </div>
+      <div class="glass" style="padding:32px; text-align:center; border-color:rgba(124,58,237,0.3);">
+        <div style="font-size:40px; margin-bottom:16px;">🕸️</div>
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-bottom:12px;">Network Disruption</h4>
+        <p style="font-size:14px; color:var(--text-muted); line-height:1.7;">Graph intelligence reveals hidden organized crime networks that operate across district boundaries — enabling targeted disruption of criminal organizations at their structural vulnerabilities.</p>
+      </div>
+      <div class="glass" style="padding:32px; text-align:center; border-color:rgba(6,182,212,0.3);">
+        <div style="font-size:40px; margin-bottom:16px;">📊</div>
+        <h4 style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; margin-bottom:12px;">Evidence-Based Policy</h4>
+        <p style="font-size:14px; color:var(--text-muted); line-height:1.7;">Comprehensive crime analytics provide Karnataka Police leadership with data-driven insights for policy decisions, budget allocation, and strategic planning at the state level.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section id="cta" class="section">
+  <div class="container">
+    <div class="reveal">
+      <div style="display:inline-block; margin-bottom:24px;">
+        <span class="badge badge-info"><span class="pulse-dot"></span>KSP DataThon 2025</span>
+      </div>
+      <h2 class="cta-title">
+        The Future of<br/><span class="gradient-text">Crime Intelligence</span><br/>Is Here.
+      </h2>
+      <p class="cta-desc">
+        KAVACH AI represents a paradigm shift — from fragmented Excel records to a unified, AI-powered intelligence ecosystem that transforms how Karnataka State Police understands, responds to, and prevents crime.
+      </p>
+      <div class="cta-buttons">
+        <a href="#solution" class="btn-primary">🛡️ Explore KAVACH AI</a>
+        <a href="#capabilities" class="btn-ghost">📊 View All Capabilities</a>
+      </div>
+      <div style="margin-top:48px; padding:24px; display:inline-block; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px;">
+        <div class="font-mono" style="font-size:11px; color:var(--text-dim); text-align:center; line-height:2;">
+          // KAVACH_AI v4.2 | Karnataka State Police | KSP DataThon 2025<br/>
+          // STATUS: OPERATIONAL | UPTIME: 99.97% | DISTRICTS: 30/30 | ENCRYPTION: AES-512
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-title">🛡️ KAVACH AI</div>
+        <p class="footer-brand-desc">
+          A comprehensive Crime Intelligence & Analytical Platform developed for the Karnataka State Police DataThon 2025. Integrating sociological insights with AI-powered criminological intelligence to build safer communities across Karnataka.
+        </p>
+        <div style="display:flex; gap:8px;">
+          <span class="badge badge-live"><span class="pulse-dot"></span>System Online</span>
+          <span class="badge badge-info">KSP DataThon 2025</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links">
+          <li><a href="#challenge">The Challenge</a></li>
+          <li><a href="#solution">Our Solution</a></li>
+          <li><a href="#capabilities">Capabilities</a></li>
+          <li><a href="#aiml">AI/ML Models</a></li>
+          <li><a href="#dataviz">Analytics</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Intelligence</div>
+        <ul class="footer-links">
+          <li><a href="#network">Network Analysis</a></li>
+          <li><a href="#predictive">Predictive Scoring</a></li>
+          <li><a href="#scrb">SCRB Integration</a></li>
+          <li><a href="#tech">Tech Stack</a></li>
+          <li><a href="#impact">Impact Metrics</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">System Status</div>
+        <ul class="footer-links">
+          <li><a href="#">Data Pipeline: ✅</a></li>
+          <li><a href="#">AI Models: ✅ 5/5</a></li>
+          <li><a href="#">Districts: ✅ 30/30</a></li>
+          <li><a href="#">Encryption: ✅ Active</a></li>
+          <li><a href="#">Uptime: 99.97%</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 KAVACH AI — Karnataka State Police DataThon | Built with ❤️ for public safety</span>
+      <span class="footer-copy">SYSTEM_HASH: 0xKAVACH_AI_KSP_2025 | STATUS: COMBAT_READY</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+// ===== LIQUID GLASS 4D TESSERACT MOTION BACKGROUND =====
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W = canvas.width = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+
+  // Mouse Tracking for interaction
+  let mouse = { x: -1000, y: -1000, active: false, targetX: -1000, targetY: -1000 };
+  window.addEventListener('mousemove', (e) => {
+    mouse.targetX = e.clientX;
+    mouse.targetY = e.clientY;
+    mouse.active = true;
+  });
+  window.addEventListener('mouseleave', () => {
+    mouse.active = false;
+  });
+
+  // Smooth mouse interpolation
+  function updateMouse() {
+    if (mouse.active) {
+      mouse.x += (mouse.targetX - mouse.x) * 0.1;
+      mouse.y += (mouse.targetY - mouse.y) * 0.1;
+    } else {
+      mouse.x += (W / 2 - mouse.x) * 0.02;
+      mouse.y += (H / 2 - mouse.y) * 0.02;
+    }
+  }
+
+  // Tesseract (4D Hypercube) Vertices
+  const vertices4d = [];
+  for (let i = 0; i < 16; i++) {
+    vertices4d.push([
+      (i & 1) ? 1 : -1,
+      (i & 2) ? 1 : -1,
+      (i & 4) ? 1 : -1,
+      (i & 8) ? 1 : -1
+    ]);
+  }
+
+  // Tesseract Edges (32 edges connecting points differing by exactly 1 coordinate)
+  const edges = [];
+  for (let i = 0; i < 16; i++) {
+    for (let j = i + 1; j < 16; j++) {
+      let diff = 0;
+      for (let k = 0; k < 4; k++) {
+        if (((i >> k) & 1) !== ((j >> k) & 1)) diff++;
+      }
+      if (diff === 1) edges.push([i, j]);
+    }
+  }
+
+  // 4D Rotation Functions
+  function rotateXY(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0] * c - p[1] * s, p[0] * s + p[1] * c, p[2], p[3]];
+  }
+  function rotateXZ(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0] * c - p[2] * s, p[1], p[0] * s + p[2] * c, p[3]];
+  }
+  function rotateXW(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0] * c - p[3] * s, p[1], p[2], p[0] * s + p[3] * c];
+  }
+  function rotateYZ(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0], p[1] * c - p[2] * s, p[1] * s + p[2] * c, p[3]];
+  }
+  function rotateYW(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0], p[1] * c - p[3] * s, p[2], p[1] * s + p[3] * c];
+  }
+  function rotateZW(p, theta) {
+    const c = Math.cos(theta), s = Math.sin(theta);
+    return [p[0], p[1], p[2] * c - p[3] * s, p[2] * s + p[3] * c];
+  }
+
+  // Particle flowing along edges
+  const edgeParticles = [];
+  for (let i = 0; i < 40; i++) {
+    edgeParticles.push({
+      edgeIndex: Math.floor(Math.random() * edges.length),
+      progress: Math.random(),
+      speed: 0.005 + Math.random() * 0.01,
+      color: ['#ff3b30', '#ff9500', '#34c759'][Math.floor(Math.random() * 3)]
+    });
+  }
+
+  let time = 0;
+  function render() {
+    time += 0.003;
+    updateMouse();
+
+    ctx.fillStyle = '#030102';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle background grid/ambient red-orange-green nebulas
+    const nebulaGrad = ctx.createRadialGradient(W/2, H/2, 50, W/2, H/2, Math.max(W, H) * 0.8);
+    nebulaGrad.addColorStop(0, 'rgba(25, 6, 8, 0.4)');
+    nebulaGrad.addColorStop(0.3, 'rgba(16, 8, 5, 0.2)');
+    nebulaGrad.addColorStop(0.6, 'rgba(5, 12, 8, 0.1)');
+    nebulaGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = nebulaGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Rotate and Project Vertices
+    const projected2d = [];
+    const scale = Math.min(W, H) * 0.45;
+    const wDistance = 2.0;
+    const zDistance = 2.5;
+
+    // Custom multi-planar rotating angles
+    const thetaXY = time * 1.2;
+    const thetaZW = time * 0.8;
+    const thetaXW = time * 0.5;
+    const thetaYW = time * 0.65;
+
+    vertices4d.forEach((v, idx) => {
+      let r = rotateXY(v, thetaXY);
+      r = rotateZW(r, thetaZW);
+      r = rotateXW(r, thetaXW);
+      r = rotateYW(r, thetaYW);
+
+      // Perspective Projection from 4D to 3D
+      const wFactor = 1 / (wDistance - r[3]);
+      const x3d = r[0] * wFactor;
+      const y3d = r[1] * wFactor;
+      const z3d = r[2] * wFactor;
+
+      // Perspective Projection from 3D to 2D
+      const zFactor = 1 / (zDistance - z3d);
+      let screenX = W / 2 + x3d * zFactor * scale;
+      let screenY = H / 2 + y3d * zFactor * scale;
+
+      // Mouse Gravitational Interaction (warping the veins)
+      let dx = mouse.x - screenX;
+      let dy = mouse.y - screenY;
+      let dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 280) {
+        // Bend vertices slightly towards the mouse
+        let force = (280 - dist) / 280;
+        screenX += (dx / dist) * force * 75;
+        screenY += (dy / dist) * force * 75;
+      }
+
+      projected2d.push({ x: screenX, y: screenY, z: z3d, w: r[3] });
+    });
+
+    // Draw Tesseract Edges (Veins)
+    edges.forEach((edge, idx) => {
+      const p1 = projected2d[edge[0]];
+      const p2 = projected2d[edge[1]];
+
+      // Draw dual layered glowing glass lines (veins)
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+
+      // Curve the veins slightly towards the mouse to look organic and reactive
+      let midX = (p1.x + p2.x) / 2;
+      let midY = (p1.y + p2.y) / 2;
+      let mdx = mouse.x - midX;
+      let mdy = mouse.y - midY;
+      let mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+      
+      if (mdist < 300) {
+        let pull = (300 - mdist) / 300 * 35;
+        midX += (mdx / mdist) * pull;
+        midY += (mdy / mdist) * pull;
+        ctx.quadraticCurveTo(midX, midY, p2.x, p2.y);
+      } else {
+        ctx.lineTo(p2.x, p2.y);
+      }
+
+      // Calculate depth colors based on Z projection
+      const avgZ = (p1.z + p2.z) / 2;
+      const alpha = Math.max(0.06, 0.45 * (1 + avgZ)); // Depth fading
+
+      // Color scheme based on edge index for Red / Orange / Green vein map
+      let strokeColor = `rgba(255, 59, 48, ${alpha})`; // Red
+      if (idx % 3 === 1) strokeColor = `rgba(255, 149, 0, ${alpha})`; // Orange
+      if (idx % 3 === 2) strokeColor = `rgba(52, 199, 89, ${alpha})`; // Green
+
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 1.0 + (1 + avgZ) * 1.5;
+      ctx.stroke();
+
+      // Draw secondary bright inner fiber
+      ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.4})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    });
+
+    // Draw Edge Particles (flowing nerve impulses)
+    edgeParticles.forEach(p => {
+      p.progress += p.speed;
+      if (p.progress > 1) {
+        p.progress = 0;
+        p.edgeIndex = Math.floor(Math.random() * edges.length);
+      }
+
+      const edge = edges[p.edgeIndex];
+      const p1 = projected2d[edge[0]];
+      const p2 = projected2d[edge[1]];
+
+      // Interpolate position along the vein path
+      let x = p1.x + (p2.x - p1.x) * p.progress;
+      let y = p1.y + (p2.y - p1.y) * p.progress;
+
+      // Draw glowing pulse dot
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    // Draw Tesseract Vertices (Nodes)
+    projected2d.forEach((p, idx) => {
+      const radius = 6 + (1 + p.z) * 3;
+      
+      // Node Outer Glow
+      const glowGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius * 3.5);
+      let glowColor = 'rgba(255, 59, 48, 0.4)'; // Red
+      if (idx % 3 === 1) glowColor = 'rgba(255, 149, 0, 0.4)'; // Orange
+      if (idx % 3 === 2) glowColor = 'rgba(52, 199, 89, 0.4)'; // Green
+      
+      glowGrad.addColorStop(0, glowColor);
+      glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius * 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Node Surface liquid glass spheres
+      const orbGrad = ctx.createRadialGradient(
+        p.x - radius * 0.3, p.y - radius * 0.3, radius * 0.1,
+        p.x, p.y, radius
+      );
+      orbGrad.addColorStop(0, '#ffffff');
+      orbGrad.addColorStop(0.3, idx % 3 === 0 ? '#ff453a' : (idx % 3 === 1 ? '#ff9f0a' : '#30d158'));
+      orbGrad.addColorStop(1, '#0c0205');
+
+      ctx.fillStyle = orbGrad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Rim reflection highlight
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    requestAnimationFrame(render);
+  }
+  render();
+})();
+
+// ===== HERO NODE GRID =====
+(function() {
+  const grid = document.getElementById('nodeGrid');
+  if (!grid) return;
+  for (let i = 0; i < 48; i++) {
+    const node = document.createElement('div');
+    node.className = 'node';
+    const r = Math.random();
+    if (r > 0.8) node.classList.add('hot');
+    else if (r > 0.5) node.classList.add('active');
+    node.style.animationDelay = (Math.random() * 3) + 's';
+    grid.appendChild(node);
+  }
+})();
+
+// ===== MINI CHART =====
+(function() {
+  const chart = document.getElementById('miniChart');
+  if (!chart) return;
+  const vals = [0.4, 0.6, 0.5, 0.8, 0.7, 0.9, 0.65, 1.0, 0.85, 0.75, 0.55, 0.7];
+  const colors = ['#1d4ed8','#3b82f6','#1d4ed8','#7c3aed','#06b6d4','#ef4444','#7c3aed','#ef4444','#f59e0b','#06b6d4','#1d4ed8','#7c3aed'];
+  vals.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.style.height = (v * 100) + '%';
+    bar.style.background = colors[i];
+    bar.style.animationDelay = (i * 0.1) + 's';
+    chart.appendChild(bar);
+  });
+})();
+
+// ===== TAB SYSTEM =====
+function showTab(id) {
+  document.querySelectorAll('.solution-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  // Draw network viz if needed
+  if (id === 'network') setTimeout(drawNetworkViz, 100);
+}
+
+// ===== HEATMAP GENERATION =====
+(function() {
+  const grid = document.getElementById('heatmapGrid');
+  if (!grid) return;
+  const levels = ['','h1','h2','h3','h4','h5'];
+  for (let r = 0; r < 6; r++) {
+    for (let c = 0; c < 7; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      // Make it more realistic
+      let intensity = Math.random();
+      if (c >= 4 && r >= 3) intensity = Math.min(1, intensity + 0.4); // Fri/Sat nights hot
+      if (c < 2 && r < 2) intensity *= 0.3; // Mon/Tue mornings cool
+      const lvl = Math.min(5, Math.floor(intensity * 5));
+      if (lvl > 0) cell.classList.add(levels[lvl]);
+      grid.appendChild(cell);
+    }
+  }
+})();
+
+// Main heatmap with row labels
+(function() {
+  const grid = document.getElementById('mainHeatmap');
+  if (!grid) return;
+  const hours = ['00:00','04:00','08:00','12:00','16:00','20:00'];
+  const levels = ['','h1','h2','h3','h4','h5'];
+  hours.forEach((h, r) => {
+    const label = document.createElement('div');
+    label.className = 'font-mono';
+    label.style.cssText = 'font-size:9px;color:var(--text-dim);display:flex;align-items:center;padding:0 8px;';
+    label.textContent = h;
+    grid.appendChild(label);
+    for (let c = 0; c < 7; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      let intensity = Math.random();
+      if (r === 5 && c >= 4) intensity = Math.min(1, intensity + 0.5); // Late Fri/Sat night
+      if (r === 2 && c < 3) intensity *= 0.2; // Morning weekdays
+      const lvl = Math.min(5, Math.floor(intensity * 5));
+      if (lvl > 0) cell.classList.add(levels[lvl]);
+      grid.appendChild(cell);
+    }
+  });
+})();
+
+// ===== NETWORK CANVAS (Tab) =====
+function drawNetworkViz() {
+  const canvas = document.getElementById('networkViz');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const nodes = [];
+  const types = [
+    { color: '#ff3b30', count: 8, label: 'S' },
+    { color: '#ff9500', count: 6, label: 'V' },
+    { color: '#34c759', count: 5, label: 'L' },
+    { color: '#ff6b63', count: 3, label: 'O' },
+  ];
+  types.forEach(t => {
+    for (let i = 0; i < t.count; i++) {
+      nodes.push({
+        x: 40 + Math.random() * (W - 80),
+        y: 20 + Math.random() * (H - 40),
+        color: t.color, label: t.label,
+        r: t.label === 'O' ? 14 : 8
+      });
+    }
+  });
+  const edges = [];
+  for (let i = 0; i < 25; i++) {
+    edges.push({ a: Math.floor(Math.random() * nodes.length), b: Math.floor(Math.random() * nodes.length) });
+  }
+  ctx.clearRect(0, 0, W, H);
+  edges.forEach(e => {
+    const a = nodes[e.a], b = nodes[e.b];
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+  nodes.forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = n.color + '33';
+    ctx.fill();
+    ctx.strokeStyle = n.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${n.r}px JetBrains Mono`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.label, n.x, n.y);
+  });
+}
+
+// ===== MAIN NETWORK CANVAS =====
+(function() {
+  const canvas = document.getElementById('networkCanvas');
+  if (!canvas) return;
+  
+  function resizeCanvas() {
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = 400;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+  const ctx = canvas.getContext('2d');
+  const nodes = [];
+  const N = 60;
+  const colors = ['#ff3b30','#ff9500','#34c759','#ff6b63','#24b34d'];
+  
+  for (let i = 0; i < N; i++) {
+    nodes.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 5 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      label: ['S','V','L','O','A'][Math.floor(Math.random() * 5)]
+    });
+  }
+
+  function draw() {
+    if (!canvas.parentElement) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw connections
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          const alpha = (1 - dist / 120) * 0.3;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    // Draw nodes
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '22';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.color + '88';
+      ctx.fill();
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+  }
+
+  function update() {
+    nodes.forEach(n => {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+      if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+    });
+    draw();
+    requestAnimationFrame(update);
+  }
+  update();
+})();
+
+// ===== COUNT-UP ANIMATION =====
+function animateCount(el) {
+  const target = parseFloat(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const isFloat = !Number.isInteger(target);
+  let start = 0;
+  const duration = 2000;
+  const startTime = performance.now();
+  
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (target - start) * eased;
+    el.textContent = (isFloat ? current.toFixed(1) : Math.floor(current).toLocaleString()) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// ===== SCROLL REVEAL =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      const counts = entry.target.querySelectorAll('[data-count]');
+      counts.forEach(el => animateCount(el));
+      if (entry.target.dataset.count) animateCount(entry.target);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, [data-count]').forEach(el => observer.observe(el));
+
+// ===== GLOBAL 3D CARD INTERACTIVE PARALLAX TILT =====
+(function() {
+  document.addEventListener('mousemove', e => {
+    const cards = document.querySelectorAll('.glass, .command-card, .stat-card, .model-card, .scrb-item, .challenge-card');
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 400) {
+        const tiltX = -(dy / (rect.height / 2)) * 8; // Max 8deg tilt
+        const tiltY = (dx / (rect.width / 2)) * 8;
+        
+        const percentX = (e.clientX - rect.left) / rect.width * 100;
+        const percentY = (e.clientY - rect.top) / rect.height * 100;
+        
+        card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(15px)`;
+        card.style.setProperty('--sheen-x', `${percentX}%`);
+        card.style.setProperty('--sheen-y', `${percentY}%`);
+      } else {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+      }
+    });
+  });
+
+  document.addEventListener('mouseleave', () => {
+    const cards = document.querySelectorAll('.glass, .command-card, .stat-card, .model-card, .scrb-item, .challenge-card');
+    cards.forEach(card => {
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+    });
+  });
+})();
+
+// ===== SCROLL SPY NAV =====
+window.addEventListener('scroll', () => {
+  const sections = ['challenge','solution','capabilities','aiml','dataviz','impact'];
+  const scrollPos = window.scrollY + 100;
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (scrollPos >= el.offsetTop && scrollPos < el.offsetTop + el.offsetHeight) {
+      document.querySelectorAll('nav a').forEach(a => {
+        a.style.color = '';
+        if (a.getAttribute('href') === '#' + id) a.style.color = '#ff9500';
+      });
+    }
+  });
+});
+
+// ===== AUTO-ANIMATE LIVE FEED =====
+(function() {
+  const messages = [
+    { cls: 'critical', loc: 'BENGALURU CENTRAL', time: '', msg: 'Anomaly detected — Night patrol density 40% below optimal. AI recommending unit redeployment.' },
+    { cls: 'warning', loc: 'DAVANGERE', time: '', msg: 'Socio-economic stress spike — unemployment index crossed 2σ threshold. Monitor for petty crime surge.' },
+    { cls: 'info', loc: 'UDUPI', time: '', msg: 'All clear — District crime index at 5-year low. Community policing program showing measurable results.' },
+    { cls: 'critical', loc: 'VIJAYAPURA', time: '', msg: 'Cross-border network alert — Known criminal network nodes detected near state boundary.' },
+  ];
+  let idx = 0;
+  setInterval(() => {
+    const now = new Date();
+    const feeds = document.querySelectorAll('.feed-meta');
+    feeds.forEach((f, i) => {
+      const t = new Date(now - i * 90000);
+      const ts = t.toTimeString().slice(0,8);
+      if (f.textContent.includes('•')) {
+        const parts = f.textContent.split('•');
+        if (parts.length >= 2) {
+          // Update timestamp
+        }
+      }
+    });
+  }, 1000);
+})();
+</script>
+</body>
+</html>
